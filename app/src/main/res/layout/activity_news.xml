@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Define as variáveis usadas por meio do DataBinding -->
+    <data>
+        <variable
+            name="viewModel"
+            type="" />
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        tools:context="">
+
+        <!-- Carrega o layout da AppBar e Toolbar -->
+        <include layout="@layout/app_bar_news" />
+
+        <!--
+            Esse ProgressBar fica visível enquanto as notícias são carregadas
+        -->
+        <ProgressBar
+            android:id="@+id/pb_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!--
+            Esse TextView é exibido caso haja algum erro enquanto carregando as notícias
+        -->
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            tools:text="Erro ao carregar as notícias. Tente novamente."
+            android:visibility="gone" />
+
+        <!--
+            RecyclerView onde as notícias serão carregadas
+        -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_news"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:items="@{viewModel.news}"
+            tools:listitem="@layout/list_item_news" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

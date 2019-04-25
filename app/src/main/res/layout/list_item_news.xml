@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <!-- Define as variáveis usadas por meio do DataBinding -->
+    <data>
+        <variable
+            name="news"
+            type="" />
+        <variable
+            name="handlers"
+            type="" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/cv_news"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/mtrl_card_spacing"
+        android:onClick=""
+        app:cardElevation="1dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="#fafafa"
+        app:cardUseCompatPadding="false"
+        app:cardPreventCornerOverlap="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Imagem da notícia -->
+            <ImageView
+                android:id="@+id/iv_news_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_news_chapeu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:src="@drawable/feed_item_image"
+                tools:scaleType="centerCrop" />
+
+            <!-- Campo "chapeu" da notícia -->
+            <TextView
+                android:id="@+id/tv_news_chapeu"
+                style="@style/TextAppearance.Chapeu"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_news_padding"
+                android:layout_marginLeft="@dimen/list_item_news_padding"
+                android:layout_marginRight="@dimen/list_item_news_padding"
+                android:layout_marginStart="@dimen/list_item_news_padding"
+                android:layout_marginEnd="@dimen/list_item_news_padding"
+                android:text="@{news.chapeu}"
+                app:layout_constraintTop_toBottomOf="@id/iv_news_image"
+                app:layout_constraintBottom_toTopOf="@id/tv_news_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="carnaval no Recife" />
+
+            <!-- Título da notícia -->
+            <TextView
+                android:id="@+id/tv_news_title"
+                style="@style/TextAppearance.Title"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_news_title_margin_top"
+                android:layout_marginLeft="@dimen/list_item_news_padding"
+                android:layout_marginRight="@dimen/list_item_news_padding"
+                android:layout_marginStart="@dimen/list_item_news_padding"
+                android:layout_marginEnd="@dimen/list_item_news_padding"
+                android:text="@{news.title}"
+                app:layout_constraintTop_toBottomOf="@id/tv_news_chapeu"
+                app:layout_constraintBottom_toTopOf="@id/tv_news_summary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Galo gigante terá cores neon, roupa jeans e crista 'black power'" />
+
+            <!-- Sumário da notícia -->
+            <TextView
+                android:id="@+id/tv_news_summary"
+                style="@style/TextAppearance.Summary"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_news_summary_margin_top"
+                android:layout_marginLeft="@dimen/list_item_news_padding"
+                android:layout_marginRight="@dimen/list_item_news_padding"
+                android:layout_marginStart="@dimen/list_item_news_padding"
+                android:layout_marginEnd="@dimen/list_item_news_padding"
+                android:text="@{news.summary}"
+                app:layout_constraintTop_toBottomOf="@id/tv_news_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Galo artesão vai homenagear o Polo de Confecções de Pernambuco" />
+
+            <!-- Timestamp da notícia -->
+            <TextView
+                android:id="@+id/tv_news_timestamp"
+                style="@style/TextAppearance.Timestamp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_news_timestamp_margin_top"
+                android:layout_marginLeft="@dimen/list_item_news_padding"
+                android:layout_marginRight="@dimen/list_item_news_padding"
+                android:layout_marginStart="@dimen/list_item_news_padding"
+                android:layout_marginEnd="@dimen/list_item_news_padding"
+                android:gravity="end"
+                android:text="@{news.timestamp}"
+                app:layout_constraintTop_toBottomOf="@id/tv_news_summary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Há 2 minutos" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

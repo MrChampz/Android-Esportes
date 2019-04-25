@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context="">
+
+    <!-- Carrega o layout da AppBar e Toolbar -->
+    <include layout="@layout/app_bar_webview" />
+
+    <!--
+        O NestedScrollView faz com que o layout possa ser "scrollado"
+        caso o conteúdo exceda o tamanho da tela.
+    -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!--
+            WebView em que o conteúdo das notícias será carregado
+        -->
+        <WebView
+            android:id="@+id/wv_news"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

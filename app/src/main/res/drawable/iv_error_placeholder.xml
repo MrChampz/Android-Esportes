@@ -1,0 +1,16 @@
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape>
+            <size
+                android:width="24dp"
+                android:height="200dp" />
+        </shape>
+    </item>
+
+    <item
+        android:drawable="@drawable/ic_error_24dp"
+        android:gravity="center" />
+
+</layer-list>

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <!-- Cores gerais -->
+    <color name="colorPrimary">#3B9C00</color>
+    <color name="colorPrimaryDark">#328500</color>
+    <!--<color name="colorAccent">#263238</color>-->
+    <color name="colorAccent">#328500</color>
+    <color name="colorBackground">#F9F9F9</color>
+
+    <!-- Cores referentes aos vários estilos de texto -->
+    <color name="colorTextChapeu">#464646</color>
+    <color name="colorTextTitle">#328400</color>
+    <color name="colorTextSummary">#848484</color>
+    <color name="colorTextTimestamp">#848484</color>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_news_padding">10dp</dimen>
+    <dimen name="list_item_news_title_margin_top">10dp</dimen>
+    <dimen name="list_item_news_summary_margin_top">5dp</dimen>
+    <dimen name="list_item_news_timestamp_margin_top">2dp</dimen>
+</resources>

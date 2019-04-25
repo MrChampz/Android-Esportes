@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Android Esportes</string>
+
+    <!-- NewsActivity -->
+    <string name="news_activity_title">Notícias</string>
+
+    <!-- SettingsActivity -->
+    <string name="settings_activity_title">Configurações</string>
+
+    <!-- Strings usadas como actions (menu) -->
+    <string name="action_settings">Configurações</string>
+    <string name="action_about">Sobre</string>
 </resources>

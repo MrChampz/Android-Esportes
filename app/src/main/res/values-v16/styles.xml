@@ -1,18 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Tema utilizado apenas na tela de splash -->
-    <style name="Theme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash</item>
-    </style>
-
-    <!-- Tema utilizado no restante da aplicação -->
-    <style name="Theme.App" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
 
     <!-- - - - - - - - - -
      - Estilos de texto  -
@@ -20,18 +7,14 @@
 
     <!-- Estilo utilizado no texto da Toolbar -->
     <style name="TextAppearance.Toolbar" parent="android:TextAppearance">
+        <item name="android:fontFamily">@font/fredoka_one_regular</item>
         <item name="android:textColor">@color/colorBackground</item>
         <item name="android:textSize">24sp</item>
     </style>
 
-    <!-- Estilo utilizado no texto da Toolbar, apenas na WebViewActivity -->
-    <style name="TextAppearance.WebView.Toolbar" parent="TextAppearance.Toolbar">
-        <item name="android:textSize">18sp</item>
-    </style>
-
     <!-- Estilo utilizado no texto do campo "chapeu" da notícia -->
     <style name="TextAppearance.Chapeu" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:fontFamily">@font/signika_semibold</item>
         <item name="android:textColor">@color/colorTextChapeu</item>
         <item name="android:textSize">17sp</item>
         <item name="android:maxLines">1</item>
@@ -41,7 +24,7 @@
 
     <!-- Estilo utilizado no título da notícia -->
     <style name="TextAppearance.Title" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:fontFamily">@font/signika_bold</item>
         <item name="android:textColor">@color/colorTextTitle</item>
         <item name="android:textSize">22sp</item>
         <item name="android:maxLines">2</item>
@@ -50,7 +33,7 @@
 
     <!-- Estilo utilizado no sumário da notícia -->
     <style name="TextAppearance.Summary" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:fontFamily">@font/signika_light</item>
         <item name="android:textColor">@color/colorTextSummary</item>
         <item name="android:textSize">17sp</item>
         <item name="android:maxLines">3</item>
@@ -59,7 +42,7 @@
 
     <!-- Estilo utilizado na data da notícia -->
     <style name="TextAppearance.Timestamp" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:fontFamily">@font/signika_light</item>
         <item name="android:textColor">@color/colorTextTimestamp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">1</item>
