@@ -3,9 +3,8 @@
 
     <!-- Define as variáveis usadas por meio do DataBinding -->
     <data>
-        <variable
-            name="news"
-            type="com.upco.androidesportes.model.News" />
+        <variable name="news" type="com.upco.androidesportes.model.News" />
+        <variable name="handlers" type="com.upco.androidesportes.util.BindingHandlers" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -16,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/mtrl_card_spacing"
+        android:onClick="@{() -> handlers.onClickNews(news)}"
         app:cardElevation="1dp"
         app:cardCornerRadius="10dp"
         app:cardBackgroundColor="#fafafa"
