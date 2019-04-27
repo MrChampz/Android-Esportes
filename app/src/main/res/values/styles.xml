@@ -20,7 +20,6 @@
 
     <!-- Estilo utilizado no texto da Toolbar -->
     <style name="TextAppearance.Toolbar" parent="android:TextAppearance">
-        <item name="android:textColor">@color/colorBackground</item>
         <item name="android:textSize">24sp</item>
     </style>
 

@@ -13,6 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
         app:titleTextAppearance="@style/TextAppearance.Toolbar"
+        app:titleTextColor="@color/colorBackground"
         app:layout_scrollFlags="scroll|enterAlways" />
 
 </com.google.android.material.appbar.AppBarLayout>

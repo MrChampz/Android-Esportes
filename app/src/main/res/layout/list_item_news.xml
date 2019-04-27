@@ -5,10 +5,7 @@
     <data>
         <variable
             name="news"
-            type="" />
-        <variable
-            name="handlers"
-            type="" />
+            type="com.upco.androidesportes.model.News" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -19,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/mtrl_card_spacing"
-        android:onClick=""
         app:cardElevation="1dp"
         app:cardCornerRadius="10dp"
         app:cardBackgroundColor="#fafafa"

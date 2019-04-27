@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="" />
+            type="com.upco.androidesportes.ui.news.NewsViewModel" />
         <import type="android.view.View" />
     </data>
 
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBackground"
-        tools:context="">
+        tools:context=".ui.news.NewsActivity">
 
         <!-- Carrega o layout da AppBar e Toolbar -->
         <include layout="@layout/app_bar_news" />
@@ -51,7 +51,6 @@
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:items="@{viewModel.news}"
             tools:listitem="@layout/list_item_news" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
