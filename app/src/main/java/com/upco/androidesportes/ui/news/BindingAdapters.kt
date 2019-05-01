@@ -20,7 +20,7 @@ import com.upco.androidesportes.R
  * BindingAdapter que configura um ImageView e carrega sua imagem a partir da url,
  * passada através do atributo app:imageUrl.
  */
-@BindingAdapter("app:imageUrl")
+@BindingAdapter("bind:imageUrl")
 fun ImageView.setImageUrl(url: String) {
     //
     val progress = CircularProgressDrawable(context)
