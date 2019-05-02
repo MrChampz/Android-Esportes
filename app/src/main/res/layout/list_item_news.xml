@@ -3,8 +3,10 @@
 
     <!-- Define as variáveis usadas por meio do DataBinding -->
     <data>
+        <import type="android.view.View" />
+        <import type="android.text.TextUtils" />
         <variable name="news" type="com.upco.androidesportes.model.News" />
-        <variable name="handlers" type="com.upco.androidesportes.util.BindingHandlers" />
+        <variable name="handlers" type="com.upco.androidesportes.ui.news.BindingHandlers" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -14,11 +16,11 @@
         android:id="@+id/cv_news"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/mtrl_card_spacing"
+        android:layout_margin="@dimen/list_item_news_margin"
         android:onClick="@{() -> handlers.onClickNews(news)}"
-        app:cardElevation="1dp"
-        app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="#fafafa"
+        app:cardElevation="@dimen/list_item_news_elevation"
+        app:cardCornerRadius="@dimen/list_item_news_corner_radius"
+        app:cardBackgroundColor="@color/colorNewsBackground"
         app:cardUseCompatPadding="false"
         app:cardPreventCornerOverlap="true">
 
@@ -31,24 +33,32 @@
                 android:id="@+id/iv_news_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:background="@color/colorNewsImageBackground"
+                android:visibility="@{TextUtils.isEmpty(news.image) ? View.GONE : View.VISIBLE}"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintVertical_bias="0.0"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tv_news_chapeu"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:src="@drawable/feed_item_image"
-                tools:scaleType="centerCrop" />
+                tools:scaleType="centerCrop"
+                imageUrl="@{news.image}" />
 
             <!-- Campo "chapeu" da notícia -->
             <TextView
                 android:id="@+id/tv_news_chapeu"
                 style="@style/TextAppearance.Chapeu"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/list_item_news_padding"
                 android:layout_marginLeft="@dimen/list_item_news_padding"
                 android:layout_marginRight="@dimen/list_item_news_padding"
                 android:layout_marginStart="@dimen/list_item_news_padding"
                 android:layout_marginEnd="@dimen/list_item_news_padding"
+                android:visibility="@{TextUtils.isEmpty(news.chapeu) ? View.GONE : View.VISIBLE}"
                 android:text="@{news.chapeu}"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@id/iv_news_image"
                 app:layout_constraintBottom_toTopOf="@id/tv_news_title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -59,13 +69,16 @@
             <TextView
                 android:id="@+id/tv_news_title"
                 style="@style/TextAppearance.Title"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/list_item_news_title_margin_top"
                 android:layout_marginLeft="@dimen/list_item_news_padding"
                 android:layout_marginRight="@dimen/list_item_news_padding"
                 android:layout_marginStart="@dimen/list_item_news_padding"
                 android:layout_marginEnd="@dimen/list_item_news_padding"
+                android:visibility="@{TextUtils.isEmpty(news.title) ? View.GONE : View.VISIBLE}"
                 android:text="@{news.title}"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@id/tv_news_chapeu"
                 app:layout_constraintBottom_toTopOf="@id/tv_news_summary"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,13 +89,16 @@
             <TextView
                 android:id="@+id/tv_news_summary"
                 style="@style/TextAppearance.Summary"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/list_item_news_summary_margin_top"
                 android:layout_marginLeft="@dimen/list_item_news_padding"
                 android:layout_marginRight="@dimen/list_item_news_padding"
                 android:layout_marginStart="@dimen/list_item_news_padding"
                 android:layout_marginEnd="@dimen/list_item_news_padding"
+                android:visibility="@{TextUtils.isEmpty(news.summary) ? View.GONE : View.VISIBLE}"
                 android:text="@{news.summary}"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@id/tv_news_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -93,14 +109,18 @@
             <TextView
                 android:id="@+id/tv_news_timestamp"
                 style="@style/TextAppearance.Timestamp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/list_item_news_timestamp_margin_top"
+                android:layout_marginBottom="@dimen/list_item_news_padding"
                 android:layout_marginLeft="@dimen/list_item_news_padding"
                 android:layout_marginRight="@dimen/list_item_news_padding"
                 android:layout_marginStart="@dimen/list_item_news_padding"
                 android:layout_marginEnd="@dimen/list_item_news_padding"
                 android:gravity="end"
-                android:text="@{news.timestamp}"
+                android:visibility="@{news.age == null ? View.GONE : View.VISIBLE}"
+                android:text="Há 2 minutos"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintTop_toBottomOf="@id/tv_news_summary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

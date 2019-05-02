@@ -11,5 +11,9 @@
     <color name="colorTextChapeu">#464646</color>
     <color name="colorTextTitle">#328400</color>
     <color name="colorTextSummary">#848484</color>
-    <color name="colorTextTimestamp">#848484</color>
+    <color name="colorTextTimestamp">#A0A0A0</color>
+
+    <!-- Cores referentes ao list item News -->
+    <color name="colorNewsBackground">#F9F9F9</color>
+    <color name="colorNewsImageBackground">#E9E9E9</color>
 </resources>

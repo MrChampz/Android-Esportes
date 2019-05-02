@@ -2,6 +2,7 @@
 
     <!-- Tema utilizado apenas na tela de splash -->
     <style name="Theme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
@@ -30,7 +31,6 @@
 
     <!-- Estilo utilizado no texto do campo "chapeu" da notícia -->
     <style name="TextAppearance.Chapeu" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/colorTextChapeu</item>
         <item name="android:textSize">17sp</item>
         <item name="android:maxLines">1</item>
@@ -40,7 +40,6 @@
 
     <!-- Estilo utilizado no título da notícia -->
     <style name="TextAppearance.Title" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/colorTextTitle</item>
         <item name="android:textSize">22sp</item>
         <item name="android:maxLines">2</item>
@@ -49,7 +48,6 @@
 
     <!-- Estilo utilizado no sumário da notícia -->
     <style name="TextAppearance.Summary" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/colorTextSummary</item>
         <item name="android:textSize">17sp</item>
         <item name="android:maxLines">3</item>
@@ -58,10 +56,10 @@
 
     <!-- Estilo utilizado na data da notícia -->
     <style name="TextAppearance.Timestamp" parent="android:TextAppearance">
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/colorTextTimestamp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 </resources>

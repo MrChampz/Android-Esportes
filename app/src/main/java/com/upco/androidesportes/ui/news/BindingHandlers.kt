@@ -1,4 +1,4 @@
-package com.upco.androidesportes.util
+package com.upco.androidesportes.ui.news
 
 import android.app.Activity
 import android.widget.Toast
