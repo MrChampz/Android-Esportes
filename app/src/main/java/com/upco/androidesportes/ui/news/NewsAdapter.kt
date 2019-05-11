@@ -1,6 +1,7 @@
 package com.upco.androidesportes.ui.news
 
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,10 +10,11 @@ import com.upco.androidesportes.model.News
 /**
  * Adapter para a lista de notícias.
  */
-class NewsAdapter: PagedListAdapter<News, RecyclerView.ViewHolder>(NEWS_COMPARATOR) {
+class NewsAdapter(private val activity: AppCompatActivity):
+        PagedListAdapter<News, RecyclerView.ViewHolder>(NEWS_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return NewsViewHolder.create(parent)
+        return NewsViewHolder.create(activity, parent)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

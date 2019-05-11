@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.app_bar_news.*
 class NewsActivity: AppCompatActivity() {
 
     private lateinit var viewModel: NewsViewModel
-    private val adapter = NewsAdapter()
+    private val adapter = NewsAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
