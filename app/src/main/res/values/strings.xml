@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Android Esportes</string>
 
     <!-- NewsActivity -->
@@ -10,4 +10,58 @@
     <!-- Strings usadas como actions (menu) -->
     <string name="action_settings">Configurações</string>
     <string name="action_about">Sobre</string>
+
+    <!--
+        Strings usadas para a exibição de timestamp
+    -->
+
+    <string name="tx_timestamp_year">
+        <xliff:g id="interval">%1$d</xliff:g> ano atrás
+    </string>
+
+    <string name="tx_timestamp_years">
+        <xliff:g id="interval">%1$d</xliff:g> anos atrás
+    </string>
+
+    <string name="tx_timestamp_month">
+        <xliff:g id="interval">%1$d</xliff:g> mês atrás
+    </string>
+
+    <string name="tx_timestamp_months">
+        <xliff:g id="interval">%1$d</xliff:g> meses atrás
+    </string>
+
+    <string name="tx_timestamp_day">
+        <xliff:g id="interval">%1$d</xliff:g> dia atrás
+    </string>
+
+    <string name="tx_timestamp_days">
+        <xliff:g id="interval">%1$d</xliff:g> dias atrás
+    </string>
+
+    <string name="tx_timestamp_hour">
+        <xliff:g id="interval">%1$d</xliff:g> hora atrás
+    </string>
+
+    <string name="tx_timestamp_hours">
+        <xliff:g id="interval">%1$d</xliff:g> horas atrás
+    </string>
+
+    <string name="tx_timestamp_minute">
+        <xliff:g id="interval">%1$d</xliff:g> minuto atrás
+    </string>
+
+    <string name="tx_timestamp_minutes">
+        <xliff:g id="interval">%1$d</xliff:g> minutos atrás
+    </string>
+
+    <string name="tx_timestamp_second">
+        <xliff:g id="interval">%1$d</xliff:g> segundo atrás
+    </string>
+
+    <string name="tx_timestamp_seconds">
+        <xliff:g id="interval">%1$d</xliff:g> segundos atrás
+    </string>
+
+    <string name="tx_timestamp_error">Ooops</string>
 </resources>

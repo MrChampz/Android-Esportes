@@ -1,12 +1,18 @@
 package com.upco.androidesportes.data.network
 
+import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import com.upco.androidesportes.model.News
 import com.upco.androidesportes.model.NewsFetchResponse
+import com.upco.androidesportes.util.DateUtils
 import java.lang.reflect.Type
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.ZonedDateTime
+import java.util.*
 
 class Deserializer: JsonDeserializer<NewsFetchResponse> {
 
@@ -29,14 +35,18 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
 
         /* Percorre cada item no array "items" do Json */
         for (item in json!!.asJsonObject["items"].asJsonArray) {
-            /* Objeto "type" do item */
+
+            /* Campo "id" do item */
+            val id = item.asJsonObject["id"].asString
+
+            /* Campo "type" do item */
             val type = item.asJsonObject["type"].asString
 
             /*
-             * Verifica se o tipo da notícia é "basico",
+             * Verifica se o id da notícia existe e se o tipo da notícia é "basico",
              * já que nós só queremos exibir notícias desse tipo.
              */
-            if (type == "basico") {
+            if (id != null && type == "basico") {
                 /* Objeto "content" do item */
                 val content = item.asJsonObject["content"].asJsonObject
 
@@ -81,18 +91,20 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                 }
 
                 /*
-                 * Verifica se o campo "age" existe no item, e se sim, pega seu valor.
+                 * Verifica se o campo "publication" existe no item, e se sim, pega seu valor.
+                 * Converte o timestamp do formato vindo da API em um formato usado no Android.
                  */
-                var age: Long? = null
+                var publication: Long? = null
                 if (item.asJsonObject["age"] != null) {
-                    age = item.asJsonObject["age"].asLong
+                    val timestamp = item.asJsonObject["publication"].asString
+                    publication = DateUtils.getUtcFromTimestamp(timestamp)
                 }
 
                 /*
                  * Com todos os campos deserializados, cria-se um [News] com os dados
                  * e então adiciona-o à lista.
                  */
-                val news = News(image, chapeu, title, summary, url, age)
+                val news = News(id, image, chapeu, title, summary, url, publication)
                 items.add(news)
             }
         }

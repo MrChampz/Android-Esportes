@@ -5,6 +5,7 @@
     <data>
         <import type="android.view.View" />
         <import type="android.text.TextUtils" />
+        <import type="com.upco.androidesportes.util.DateUtils" />
         <variable name="news" type="com.upco.androidesportes.model.News" />
         <variable name="handlers" type="com.upco.androidesportes.ui.news.BindingHandlers" />
     </data>
@@ -118,8 +119,8 @@
                 android:layout_marginStart="@dimen/list_item_news_padding"
                 android:layout_marginEnd="@dimen/list_item_news_padding"
                 android:gravity="end"
-                android:visibility="@{news.age == null ? View.GONE : View.VISIBLE}"
-                android:text="Há 2 minutos"
+                android:visibility="@{news.publication == null ? View.GONE : View.VISIBLE}"
+                android:text="@{DateUtils.getFriendlyTimeString(context, news.publication)}"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintTop_toBottomOf="@id/tv_news_summary"
                 app:layout_constraintBottom_toBottomOf="parent"

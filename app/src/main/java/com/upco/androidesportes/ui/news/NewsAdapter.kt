@@ -28,7 +28,7 @@ class NewsAdapter(private val activity: AppCompatActivity):
         private val NEWS_COMPARATOR = object: DiffUtil.ItemCallback<News>() {
 
             override fun areItemsTheSame(oldItem: News, newItem: News) =
-                    oldItem.uid == newItem.uid
+                    oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: News, newItem: News) =
                     oldItem == newItem

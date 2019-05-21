@@ -1,14 +1,12 @@
 package com.upco.androidesportes.ui.news
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.upco.androidesportes.databinding.ListItemNewsBinding
 import com.upco.androidesportes.model.News
+import com.upco.androidesportes.util.DateUtils
 
 /**
  * ViewHolder para a classe de modelo [News].

@@ -23,8 +23,9 @@ interface NewsDao {
 
     /**
      * Faz uma requisição similar à da API:
-     * Obtém as notícias armazenadas no banco de dados.
+     * Obtém as notícias armazenadas no banco de dados,
+     * e as retorna em ordem descendente, da mais recente para a mais antiga.
      */
-    @Query("SELECT * FROM news")
+    @Query("SELECT * FROM news ORDER BY publication DESC")
     fun news(): DataSource.Factory<Int, News>
 }
