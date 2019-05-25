@@ -1,10 +1,7 @@
 package com.upco.androidesportes.data.database
 
 import androidx.paging.DataSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.upco.androidesportes.model.News
 
 
@@ -28,4 +25,10 @@ interface NewsDao {
      */
     @Query("SELECT * FROM news ORDER BY publication DESC")
     fun news(): DataSource.Factory<Int, News>
+
+    /**
+     * Deleta todas as notícias do banco de dados.
+     */
+    @Query("DELETE FROM news")
+    fun clear()
 }

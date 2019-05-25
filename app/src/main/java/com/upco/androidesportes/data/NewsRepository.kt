@@ -4,13 +4,20 @@ import android.util.Log
 import androidx.paging.LivePagedListBuilder
 import com.upco.androidesportes.data.database.LocalCache
 import com.upco.androidesportes.data.network.Service
+import com.upco.androidesportes.data.network.fetchNews
 import com.upco.androidesportes.model.NewsFetchResult
 
 /**
  * Repositório para notícias [News].
  * Funciona com fonte de dados local (Room) e externa (API).
  */
-class NewsRepository(private val service: Service, private val cache: LocalCache) {
+class NewsRepository(service: Service, cache: LocalCache) {
+
+    /* Obtém o data source factory através do cache */
+    private val dataSourceFactory = cache.news()
+
+    /* Constrói o boundary callback */
+    private val boundaryCallback = NewsBoundaryCallback(service, cache)
 
     /**
      * Faz uma requisição por notícias, que poderão ter como fonte de dados
@@ -21,22 +28,26 @@ class NewsRepository(private val service: Service, private val cache: LocalCache
     fun fetchNews(): NewsFetchResult {
         Log.d(TAG, "Requisitando notícias")
 
-        /* Obtém o data source factory através do cache */
-        val dataSourceFactory = cache.news()
-
-        /* Constrói o boundary callback */
-        val boundaryCallback = NewsBoundaryCallback(service, cache)
-
-        /* Obtém os erros de rede expostos pelo boundary callback */
-        val networkErrors = boundaryCallback.networkErrors
-
         /* Obtém o [PagedList] com as notícias */
         val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
                 .setBoundaryCallback(boundaryCallback)
                 .build()
 
+        /* Obtém os erros de rede expostos pelo boundary callback */
+        val networkErrors = boundaryCallback.networkErrors
+
         /* Retorna o [NewsFetchResult] com os dados do [PagedList] e os erros, se houver */
         return NewsFetchResult(data, networkErrors)
+    }
+
+    /**
+     * Atualiza as notícias. Limpa os dados locais e faz uma nova requisição à API.
+     */
+    fun refreshNews() {
+        Log.d(TAG, "Atualizando notícias")
+
+        /* Força o Boundary Callback a atualizar as notícias */
+        boundaryCallback.refresh()
     }
 
     companion object {

@@ -56,6 +56,9 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                 var image: String? = null
                 if (content["image"] != null) {
                     image = content["image"].asJsonObject["url"].asString
+
+                    /* Se houver caracteres de quebra de linha, remove-os */
+                    image = image.replace("\n", "")
                 }
 
                 /*
@@ -64,6 +67,9 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                 var chapeu: String? = null
                 if (content["chapeu"] != null) {
                     chapeu = content["chapeu"].asJsonObject["label"].asString
+
+                    /* Se houver caracteres de quebra de linha, remove-os */
+                    chapeu = chapeu.replace("\n", "")
                 }
 
                 /*
@@ -72,6 +78,9 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                 var title: String? = null
                 if (content["title"] != null) {
                     title = content["title"].asString
+
+                    /* Se houver caracteres de quebra de linha, remove-os */
+                    title = title.replace("\n", "")
                 }
 
                 /*
@@ -80,6 +89,9 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                 var summary: String? = null
                 if (content["summary"] != null) {
                     summary = content["summary"].asString
+
+                    /* Se houver caracteres de quebra de linha, remove-os */
+                    summary = summary.replace("\n", "")
                 }
 
                 /*
@@ -88,6 +100,9 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                 var url: String? = null
                 if (content["url"] != null) {
                     url = content["url"].asString
+
+                    /* Se houver caracteres de quebra de linha, remove-os */
+                    url = url.replace("\n", "")
                 }
 
                 /*

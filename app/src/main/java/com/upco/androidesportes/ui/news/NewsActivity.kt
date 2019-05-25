@@ -9,17 +9,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.upco.androidesportes.R
 import com.upco.androidesportes.databinding.ActivityNewsBinding
 import com.upco.androidesportes.model.News
 import com.upco.androidesportes.util.Injector
+import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
 
-class NewsActivity: AppCompatActivity() {
+class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var viewModel: NewsViewModel
     private val adapter = NewsAdapter(this)
 
+    /**
+     * Método chamado quando a activity está iniciando,
+     * é aqui que o código de inicialização deve ir.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,24 +35,23 @@ class NewsActivity: AppCompatActivity() {
             R.layout.activity_news
         )
 
-        /* Define o título da Toolbar e a define como supportActionBar */
+        /* Configura a Toolbar */
         setupToolbar()
 
-        /*
-         * Obtém o ViewModel e configura um Observer que notificará o
-         * adapter sempre que houver alterações no dados do ViewModel (news)
-         */
+        /* Configura o SwipeRefreshLayout */
+        setupSwipeRefreshLayout()
+
+        /* Configura o ViewModel */
         setupViewModel()
 
         /* Faz binding do ViewModel com o código estático */
         binding.viewModel = viewModel
 
         /* Define o adapter do RecyclerView */
-        binding.rvNews.adapter = adapter
+        rv_news.adapter = adapter
 
-        // TODO: mover para um Service
         /* Faz a requisição inicial pelas notícias */
-        viewModel.fetchNews()
+        requestInitialData()
     }
 
     /**
@@ -73,11 +78,31 @@ class NewsActivity: AppCompatActivity() {
     }
 
     /**
+     * Método chamado quando o usuário desliza o [SwipeRefreshLayout],
+     * para que o conteúdo do feed seja atualizado.
+     */
+    override fun onRefresh() {
+        /* Indica ao ViewModel que queremos atualizar o feed de notícias */
+        viewModel.refreshNews()
+    }
+
+    /**
      * Configura a Toolbar.
      */
     private fun setupToolbar() {
         toolbar.title = getString(R.string.news_activity_title)
         setSupportActionBar(toolbar)
+    }
+
+    /**
+     * Configura o SwipeRefreshLayout.
+     */
+    private fun setupSwipeRefreshLayout() {
+        /* Define o listener que será chamado quando atualizando */
+        srl_news.setOnRefreshListener(this)
+
+        /* Define o esquema de cores que serão usadas, nesse caso apenas a cor primária do app */
+        srl_news.setColorSchemeResources(R.color.colorPrimary)
     }
 
     /**
@@ -96,6 +121,9 @@ class NewsActivity: AppCompatActivity() {
              * passa a lista alterada para o adapter.
              */
             adapter.submitList(it)
+
+            /* Se os dados foram recebidos, o feed não está em atualização mais */
+            srl_news.isRefreshing = it.isEmpty()
         })
 
         /* Define um Observer para observar às alterações em networkErrors */
@@ -103,6 +131,18 @@ class NewsActivity: AppCompatActivity() {
             Toast.makeText(this, "\uD8D3\uDE28 Ooops $it", Toast.LENGTH_LONG)
                  .show()
         })
+    }
+
+    /**
+     * Faz a requisição inicial pelas notícias.
+     * Esse método deve ser chamado sempre que o app for aberto.
+     */
+    private fun requestInitialData() {
+        /* Indica ao SwipeRefreshLayout que estamos atualizando o feed */
+        srl_news.isRefreshing = true
+
+        /* Faz a requisição inicial pelas notícias. */
+        viewModel.fetchNews()
     }
 
     /**

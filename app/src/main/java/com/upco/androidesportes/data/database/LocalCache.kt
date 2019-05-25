@@ -33,4 +33,17 @@ class LocalCache(private val newsDao: NewsDao, private val ioExecutor: Executor)
      * no banco da dados, ao DAO.
      */
     fun news() = newsDao.news()
+
+    /**
+     * Deleta todas as notícias do banco de dados, em uma thread, em segundo plano.
+     *
+     * @param clearFinished Função que será executada ao final da remoção das notícias.
+     */
+    fun clear(clearFinished: () -> Unit) {
+        ioExecutor.execute {
+            Log.d(TAG, "Removendo todas as notícias")
+            newsDao.clear()
+            clearFinished()
+        }
+    }
 }
