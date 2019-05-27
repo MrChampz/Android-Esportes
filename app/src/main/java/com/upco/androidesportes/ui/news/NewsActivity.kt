@@ -90,7 +90,10 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
      * Configura a Toolbar.
      */
     private fun setupToolbar() {
+        /* Define o título da Toolbar */
         toolbar.title = getString(R.string.news_activity_title)
+
+        /* Define a Toolbar como supportActionBar dessa activity */
         setSupportActionBar(toolbar)
     }
 
@@ -146,6 +149,7 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /**
+     * TODO: Implementar
      * Esse método é chamado caso o item de "Configurações", no menu, seja selecionado.
      */
     private fun handleActionSettings(): Boolean {

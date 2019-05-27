@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context="">
+    tools:context=".ui.webview.WebViewActivity">
 
     <!-- Carrega o layout da AppBar e Toolbar -->
     <include layout="@layout/app_bar_webview" />

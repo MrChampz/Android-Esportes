@@ -1,7 +1,9 @@
 package com.upco.androidesportes.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Classe de domínio que armazena todas as informações sobre uma notícia.
@@ -16,6 +18,7 @@ import androidx.room.PrimaryKey
  * @param publication Timestamp (em millis) de quando a notícia foi publicada.
  */
 @Entity(tableName = "news")
+@Parcelize
 data class News(
     @PrimaryKey
     val id: String,
@@ -25,4 +28,9 @@ data class News(
     val summary: String?,
     val url: String?,
     val publication: Long?
-)
+): Parcelable {
+    companion object {
+        /** Usada para passar um [News], como extra, por meio de intents. */
+        const val KEY = "news"
+    }
+}
