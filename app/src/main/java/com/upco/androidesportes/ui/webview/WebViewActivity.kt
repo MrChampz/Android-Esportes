@@ -3,23 +3,26 @@ package com.upco.androidesportes.ui.webview
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import com.upco.androidesportes.R
 import com.upco.androidesportes.model.News
+import com.upco.androidesportes.ui.common.showWithAnimation
 import kotlinx.android.synthetic.main.activity_webview.*
+import kotlinx.android.synthetic.main.activity_webview.fab_top
 import kotlinx.android.synthetic.main.app_bar_webview.*
 
+/**
+ * Exibe a página da notícia em um [WebView].
+ */
 class WebViewActivity: AppCompatActivity() {
 
     /*
@@ -46,6 +49,9 @@ class WebViewActivity: AppCompatActivity() {
 
         /* Configura o WebView */
         setupWebView()
+
+        /* Configura o FloatingActionButton */
+        setupFloatingActionButton()
     }
 
     /**
@@ -55,6 +61,9 @@ class WebViewActivity: AppCompatActivity() {
         /* Define o título da Toolbar, de acordo com o título da notícia */
         toolbar.title = news.title
 
+        /* Define a Toolbar como supportActionBar dessa activity */
+        setSupportActionBar(toolbar)
+
         /*
          * Define o que deve ser feito ao clicar no ícone de navegação.
          * Nesse caso, a activity será encerrada e a NewsActivity será exibida novamente.
@@ -62,9 +71,6 @@ class WebViewActivity: AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
-
-        /* Define a Toolbar como supportActionBar dessa activity */
-        setSupportActionBar(toolbar)
     }
 
     /**
@@ -156,5 +162,114 @@ class WebViewActivity: AppCompatActivity() {
 
         /* Por fim, carrega a página da notícia por meio de sua url */
         wv_news.loadUrl(news.url)
+    }
+
+    /**
+     * Configura o FloatingActionButton.
+     */
+    private fun setupFloatingActionButton() {
+        /*
+         * Adiciona um listener ao RecyclerView que será acionado sempre que houver uma rolagem.
+         * Isso é necessário pois queremos que o FAB seja exibido apenas depois de certa rolagem.
+         */
+        /*
+        rv_news.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+
+            /**
+             * Método callback invocado quando o RecyclerView é rolado. Esse método é chamado
+             * após a rolagem.
+             *
+             * @param recyclerView O RecyclerView que sofreu a rolagem.
+             * @param dx           A quantidade de rolagem horizontal.
+             * @param dy           A quantidade de rolagem vertical.
+             */
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                /* Pega o LayoutManager do RecyclerView */
+                val layoutManager = (recyclerView.layoutManager as LinearLayoutManager)
+
+                /* Pega a posição do primeiro item visível atualmente no RecyclerView */
+                val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
+
+                /*
+                 * Verifica se a posição é maior do que 2 e se sim, exibe o FAB.
+                 * Caso contrário, oculta o FAB.
+                 */
+                if (firstVisibleItem > 2)
+                    fab_top.show()
+                else
+                    fab_top.hide()
+            }
+        })
+        */
+
+        /* O estado inicial do FAB deve ser oculto */
+        fab_top.hide()
+
+        /*
+         * Adiciona um listener ao NestedScrollView que será acionado sempre que houver uma rolagem.
+         * Isso é necessário pois queremos que o FAB seja exibido apenas depois de certa rolagem.
+         */
+        nsv_news.setOnScrollChangeListener(object: NestedScrollView.OnScrollChangeListener {
+
+            /*
+             * Indica se o FAB está ativo ou não.
+             * Essa variável controla quando o FAB deve ser exibido ou ocultado por esse listener.
+             * Isso é necessário pois o FABScrollBehavior também controla quando o FAB é ou não
+             * exibido.
+             */
+            private var activated = false
+
+            /**
+             * Chamado quando a posição de rolagem de uma view muda.
+             *
+             * @param v          A view da qual a posição de rolagem mudou.
+             * @param scrollX    Origem atual da rolagem horizontal.
+             * @param scrollY    Origem atual da rolagem vertical.
+             * @param oldScrollX Origem anterior da rolagem horizontal.
+             * @param oldScrollY Origem anterior da rolagem vertical.
+             */
+            override fun onScrollChange(
+                v: NestedScrollView?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                /*
+                 * Exibe o FAB apenas se a rolagem passar de certo ponto (800 pixels), antes
+                 * desse ponto ele ficará oculto.
+                 * Primeiro verifica se a rolagem vertical consumiu mais de 800 pixels e se o
+                 * FAB está inativo e se sim, ativa e exibe ele.
+                 * Caso não passe nas condições, verifica se a rolagem vertical consumiu menos
+                 * que ou 800 pixels e se o FAB está ativo, e nesse caso desativa e oculta ele.
+                 */
+                if (scrollY > 800 && !activated) {
+                    /* Ativa o FAB */
+                    activated = true
+
+                    /*
+                     * Exibe o FAB.
+                     * A função showWithAnimation(), que estende a classe FloatingActionButton,
+                     * é usada aqui para contornar um bug em que a animação do FAB não funciona
+                     * de primeira, quando a activity é criada.
+                     */
+                    fab_top.showWithAnimation()
+                } else if (scrollY <= 800 && activated){
+                    /* Desativa o FAB */
+                    activated = false
+
+                    /* Oculta o FAB */
+                    fab_top.hide()
+                }
+            }
+        })
+
+        /* Define o listener que será acionado quando o FAB receber um clique */
+        fab_top.setOnClickListener {
+            /* Faz com que o NestedScrollView role suavemente até a posição inicial da página */
+            nsv_news.smoothScrollTo(0, 0)
+        }
     }
 }

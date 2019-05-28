@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Dimensões relativas à activity de notícias -->
+    <dimen name="news_fab_size">35dp</dimen>
+    <dimen name="news_fab_margin">16dp</dimen>
+
+    <!-- Dimensões relativas ao layout de uma notícia -->
     <dimen name="list_item_news_margin">8dp</dimen>
     <dimen name="list_item_news_padding">10dp</dimen>
     <dimen name="list_item_news_elevation">1dp</dimen>

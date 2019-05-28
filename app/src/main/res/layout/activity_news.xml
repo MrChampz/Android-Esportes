@@ -21,16 +21,7 @@
         <include layout="@layout/app_bar_news" />
 
         <!--
-            Esse ProgressBar fica visível enquanto as notícias são carregadas
-        -->
-        <ProgressBar
-            android:id="@+id/pb_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <!--
+            TODO: Implementar!
             Esse TextView é exibido caso haja algum erro enquanto carregando as notícias
         -->
         <TextView
@@ -63,5 +54,20 @@
                 tools:listitem="@layout/list_item_news" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <!--
+            FAB responsável por retornar ao início do feed de notícias
+        -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/news_fab_margin"
+            android:src="@drawable/ic_double_up_chevron_24dp"
+            app:layout_anchor="@id/rv_news"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_behavior=".ui.common.FABScrollBehavior"
+            app:fabCustomSize="@dimen/news_fab_size" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
