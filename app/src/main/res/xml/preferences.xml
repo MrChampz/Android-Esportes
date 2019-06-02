@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--
+        Define os itens da activity de configurações.
+    -->
+
+    <!-- Categoria de dados -->
+    <PreferenceCategory
+        app:title="@string/tx_data_header"
+        app:iconSpaceReserved="false">
+
+        <!--
+            O usuário deve marcar essa opção para que os dados sejam baixados tanto
+            pelo WiFi quanto pelos dados móveis. Por padrão os dados serão baixados
+            apenas por WiFi.
+        -->
+        <SwitchPreferenceCompat
+            app:key="@string/tx_data_download_key"
+            app:title="@string/tx_data_download_title"
+            app:summary="@string/tx_data_download_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

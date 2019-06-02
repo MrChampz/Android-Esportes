@@ -1,6 +1,14 @@
 package com.upco.androidesportes.ui.news
 
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.TYPE_WIFI
+import android.net.NetworkCapabilities
+import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
+import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -9,6 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,7 +25,9 @@ import com.upco.androidesportes.R
 import com.upco.androidesportes.databinding.ActivityNewsBinding
 import com.upco.androidesportes.model.News
 import com.upco.androidesportes.ui.common.showWithAnimation
+import com.upco.androidesportes.ui.settings.SettingsActivity
 import com.upco.androidesportes.util.Injector
+import com.upco.androidesportes.util.NetworkUtils
 import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
 
@@ -92,7 +103,7 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
      */
     override fun onRefresh() {
         /* Indica ao ViewModel que queremos atualizar o feed de notícias */
-        viewModel.refreshNews()
+        viewModel.refreshNews(this)
     }
 
     /**
@@ -220,6 +231,23 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /**
+     * Esse método é chamado caso o item de "Configurações", no menu, seja selecionado.
+     * Ele é responsável por iniciar a activity de configurações.
+     *
+     * @return Retorna true indicando que a ação foi tratada.
+     */
+    private fun handleActionSettings(): Boolean {
+        /* Cria o intent para a activity */
+        val intent = Intent(this, SettingsActivity::class.java)
+
+        /* Inicia a activity por meio do intent */
+        startActivity(intent)
+
+        /* Retorna true indicando que a ação foi tratada */
+        return true
+    }
+
+    /**
      * Faz a requisição inicial pelas notícias.
      * Esse método deve ser chamado sempre que o app for aberto.
      */
@@ -228,16 +256,6 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         srl_news.isRefreshing = true
 
         /* Faz a requisição inicial pelas notícias. */
-        viewModel.fetchNews()
-    }
-
-    /**
-     * TODO: Implementar
-     * Esse método é chamado caso o item de "Configurações", no menu, seja selecionado.
-     */
-    private fun handleActionSettings(): Boolean {
-        Toast.makeText(this, "Configurações", Toast.LENGTH_SHORT)
-             .show()
-        return true
+        viewModel.fetchNews(this)
     }
 }

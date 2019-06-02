@@ -64,4 +64,16 @@
     </string>
 
     <string name="tx_timestamp_error">Ooops</string>
+
+    <!-- Título das categorias de preferencias -->
+    <string name="tx_data_header">Dados</string>
+
+    <!-- Strings relacionadas às preferencias de dados -->
+    <string name="tx_data_download_key">download</string>
+    <string name="tx_data_download_title">Baixar dados via rede móvel</string>
+    <string name="tx_data_download_summary">
+        Recomendamos que desmarque essa opção se você deseja limitar o seu uso de dados.
+        \nO download ocorrerá de modo padrão via conexão Wi-Fi.
+    </string>
+
 </resources>

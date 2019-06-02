@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.upco.androidesportes">
@@ -5,14 +6,17 @@
     <!-- Necessário para a solicitação de dados na web -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Necessário para a verificação do estado da rede -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
-        android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.App">
+        android:theme="@style/Theme.App"
+        android:usesCleartextTraffic="true">
 
         <!-- SplashActivity -->
         <activity
@@ -20,6 +24,7 @@
             android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,5 +35,9 @@
         <!-- WebViewActivity -->
         <activity android:name=".ui.webview.WebViewActivity" />
 
+        <!-- SettingsActivity -->
+        <activity android:name=".ui.settings.SettingsActivity" />
+
     </application>
+
 </manifest>

@@ -1,0 +1,18 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    tools:context=".ui.settings.SettingsActivity">
+
+    <!-- Carrega o layout da AppBar e Toolbar -->
+    <include layout="@layout/app_bar_settings" />
+
+    <!-- O SettingsFragment será carregado no lugar desse FrameLayout -->
+    <FrameLayout
+        android:id="@+id/fl_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
