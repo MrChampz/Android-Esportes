@@ -5,12 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.upco.androidesportes.R
+import com.upco.androidesportes.ui.common.BaseActivity
 import kotlinx.android.synthetic.main.app_bar_news.*
 
 /**
  * Possibilita modificar as configurações da aplicação.
  */
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity: BaseActivity() {
 
     /**
      * Método chamado quando a activity está iniciando,
@@ -23,32 +24,13 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         /* Configura a Toolbar */
-        setupToolbar()
+        setupToolbar(getString(R.string.settings_activity_title), true)
 
         /* Carrega o SettingsFragment no lugar do FrameLayout definido no código estático */
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fl_settings, SettingsFragment())
                 .commit()
-    }
-
-    /**
-     * Configura a Toolbar.
-     */
-    private fun setupToolbar() {
-        /* Define o título da Toolbar */
-        toolbar.title = getString(R.string.settings_activity_title)
-
-        /* Define a Toolbar como supportActionBar dessa activity */
-        setSupportActionBar(toolbar)
-
-        /*
-         * Define o que deve ser feito ao clicar no ícone de navegação.
-         * Nesse caso, a activity será encerrada e a NewsActivity será exibida novamente.
-         */
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
     }
 
     /**

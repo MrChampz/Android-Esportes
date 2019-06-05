@@ -21,9 +21,11 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.upco.androidesportes.R
 import com.upco.androidesportes.databinding.ActivityNewsBinding
 import com.upco.androidesportes.model.News
+import com.upco.androidesportes.ui.common.BaseActivity
 import com.upco.androidesportes.ui.common.showWithAnimation
 import com.upco.androidesportes.ui.settings.SettingsActivity
 import com.upco.androidesportes.util.Injector
@@ -34,7 +36,7 @@ import kotlinx.android.synthetic.main.app_bar_news.*
 /**
  * Exibe um feed de notícias. Ao clicar em alguma, instancia uma [WebViewActivity] para exibi-la.
  */
-class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var viewModel: NewsViewModel
     private val adapter = NewsAdapter(this)
@@ -53,7 +55,7 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         )
 
         /* Configura a Toolbar */
-        setupToolbar()
+        setupToolbar(getString(R.string.news_activity_title), false)
 
         /* Configura o SwipeRefreshLayout */
         setupSwipeRefreshLayout()
@@ -104,17 +106,6 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     override fun onRefresh() {
         /* Indica ao ViewModel que queremos atualizar o feed de notícias */
         viewModel.refreshNews(this)
-    }
-
-    /**
-     * Configura a Toolbar.
-     */
-    private fun setupToolbar() {
-        /* Define o título da Toolbar */
-        toolbar.title = getString(R.string.news_activity_title)
-
-        /* Define a Toolbar como supportActionBar dessa activity */
-        setSupportActionBar(toolbar)
     }
 
     /**
@@ -213,14 +204,17 @@ class NewsActivity: AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
         /* Define um Observer para observar às alterações em news */
         viewModel.news.observe(this, Observer<PagedList<News>> {
-            /*
-             * Se houver alguma alteração na lista de notícias,
-             * passa a lista alterada para o adapter.
-             */
-            adapter.submitList(it)
+            /* Verifica se os dados foram recebidos */
+            if (!it.isEmpty()) {
+                /* Passa a lista alterada para o adapter */
+                adapter.submitList(it)
 
-            /* Se os dados foram recebidos, o feed não está em atualização mais */
-            srl_news.isRefreshing = it.isEmpty()
+                /* Faz com que o RecyclerView de notícias role suavemente até a posição inicial */
+                rv_news.smoothScrollToPosition(0)
+
+                /* Os dados foram recebidos, o feed não está em atualização mais */
+                srl_news.isRefreshing = false
+            }
         })
 
         /* Define um Observer para observar às alterações em networkErrors */

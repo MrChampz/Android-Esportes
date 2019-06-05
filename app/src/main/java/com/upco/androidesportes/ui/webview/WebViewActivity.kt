@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import com.upco.androidesportes.R
 import com.upco.androidesportes.model.News
+import com.upco.androidesportes.ui.common.BaseActivity
 import com.upco.androidesportes.ui.common.showWithAnimation
 import kotlinx.android.synthetic.main.activity_webview.*
 import kotlinx.android.synthetic.main.activity_webview.fab_top
@@ -23,7 +25,7 @@ import kotlinx.android.synthetic.main.app_bar_webview.*
 /**
  * Exibe a página da notícia em um [WebView].
  */
-class WebViewActivity: AppCompatActivity() {
+class WebViewActivity: BaseActivity() {
 
     /*
      * Referencia a notícia passada por intent, pois essa
@@ -45,32 +47,13 @@ class WebViewActivity: AppCompatActivity() {
         news = intent.getParcelableExtra(News.KEY)
 
         /* Configura a Toolbar */
-        setupToolbar()
+        setupToolbar(news.title, true)
 
         /* Configura o WebView */
         setupWebView()
 
         /* Configura o FloatingActionButton */
         setupFloatingActionButton()
-    }
-
-    /**
-     * Configura a Toolbar.
-     */
-    private fun setupToolbar() {
-        /* Define o título da Toolbar, de acordo com o título da notícia */
-        toolbar.title = news.title
-
-        /* Define a Toolbar como supportActionBar dessa activity */
-        setSupportActionBar(toolbar)
-
-        /*
-         * Define o que deve ser feito ao clicar no ícone de navegação.
-         * Nesse caso, a activity será encerrada e a NewsActivity será exibida novamente.
-         */
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
     }
 
     /**
@@ -168,42 +151,6 @@ class WebViewActivity: AppCompatActivity() {
      * Configura o FloatingActionButton.
      */
     private fun setupFloatingActionButton() {
-        /*
-         * Adiciona um listener ao RecyclerView que será acionado sempre que houver uma rolagem.
-         * Isso é necessário pois queremos que o FAB seja exibido apenas depois de certa rolagem.
-         */
-        /*
-        rv_news.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-
-            /**
-             * Método callback invocado quando o RecyclerView é rolado. Esse método é chamado
-             * após a rolagem.
-             *
-             * @param recyclerView O RecyclerView que sofreu a rolagem.
-             * @param dx           A quantidade de rolagem horizontal.
-             * @param dy           A quantidade de rolagem vertical.
-             */
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                /* Pega o LayoutManager do RecyclerView */
-                val layoutManager = (recyclerView.layoutManager as LinearLayoutManager)
-
-                /* Pega a posição do primeiro item visível atualmente no RecyclerView */
-                val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-
-                /*
-                 * Verifica se a posição é maior do que 2 e se sim, exibe o FAB.
-                 * Caso contrário, oculta o FAB.
-                 */
-                if (firstVisibleItem > 2)
-                    fab_top.show()
-                else
-                    fab_top.hide()
-            }
-        })
-        */
-
         /* O estado inicial do FAB deve ser oculto */
         fab_top.hide()
 
