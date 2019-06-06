@@ -30,6 +30,7 @@ import com.upco.androidesportes.ui.common.showWithAnimation
 import com.upco.androidesportes.ui.settings.SettingsActivity
 import com.upco.androidesportes.util.Injector
 import com.upco.androidesportes.util.NetworkUtils
+import com.upco.androidesportes.util.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.app_bar_news.*
 
@@ -73,7 +74,7 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         rv_news.adapter = adapter
 
         /* Faz a requisição inicial pelas notícias */
-        requestInitialData()
+        requestInitialNews()
     }
 
     /**
@@ -105,7 +106,7 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
      */
     override fun onRefresh() {
         /* Indica ao ViewModel que queremos atualizar o feed de notícias */
-        viewModel.refreshNews(this)
+        refreshNews()
     }
 
     /**
@@ -245,11 +246,84 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
      * Faz a requisição inicial pelas notícias.
      * Esse método deve ser chamado sempre que o app for aberto.
      */
-    private fun requestInitialData() {
+    private fun requestInitialNews() {
         /* Indica ao SwipeRefreshLayout que estamos atualizando o feed */
         srl_news.isRefreshing = true
 
         /* Faz a requisição inicial pelas notícias. */
-        viewModel.fetchNews(this)
+        viewModel.fetchNews()
+
+        /* Faz com que os dados em cache sejam atualizados para os mais recentes na API. */
+        refreshNews()
+    }
+
+    /**
+     * Atualiza as notícias em cache, com as mais recentes na API, se houver internet.
+     * Esse método é chamado na atualização do feed.
+     */
+    private fun refreshNews() {
+        /*
+         * Obtém o valor da configuração que indica se os dados devem ser
+         * baixados apenas por WiFi ou por redes móveis também.
+         * O valor de retorno true indica que ambas as redes podem ser usadas.
+         */
+        val useBothNetworks = PreferenceUtils.shouldUseBothNetworks(this)
+
+        /* Verifica se o WiFi está conectado */
+        val isWifiConnected = NetworkUtils.isWifiConnected(this)
+
+        /* Verifica se a rede móvel está conectada */
+        val isMobileConnected = NetworkUtils.isMobileConnected(this)
+
+        /* Indica se os dados locais devem ser atualizados de acordo com a API */
+        val fetchNewData = if (isWifiConnected) {
+            /* Loga para fins de debug */
+            Log.d(TAG, "O dados serão baixados por WiFi.")
+
+            /* Retorna true, indicando que as notícias devem ser atualizadas */
+            true
+        } else if (useBothNetworks && isMobileConnected) {
+            /* Loga para fins de debug */
+            Log.d(TAG, "O dados serão baixados por rede móvel.")
+
+            /* Retorna true, indicando que as notícias devem ser atualizadas */
+            true
+        } else if (!useBothNetworks && isMobileConnected) {
+            /* Loga para fins de debug */
+            Log.d(TAG, "Há rede móvel, porém os dados só podem ser baixados por WiFi. " +
+                    "Os dados não serão baixados.")
+
+            /* Notifica o erro ao usuário por meio de um Snackbar */
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                "Erro ao atualizar o feed. Os dados devem ser baixados por WiFi.",
+                Snackbar.LENGTH_LONG
+            ).show()
+
+            /* Retorna false, indicando que as notícias não devem ser atualizadas */
+            false
+        } else {
+            /* Loga para fins de debug */
+            Log.d(TAG, "Não há qualquer tipo de rede. Os dados não serão baixados.")
+
+            /* Notifica o erro ao usuário por meio de um Snackbar */
+            Snackbar.make(
+                findViewById(android.R.id.content),
+                "Erro ao atualizar o feed. Não há nenhuma rede conectada.",
+                Snackbar.LENGTH_LONG
+            ).show()
+
+            /* Retorna false, indicando que as notícias não devem ser atualizadas */
+            false
+        }
+
+        /* Atualiza as notícias de acordo com a API */
+        if (fetchNewData) {
+            viewModel.refreshNews()
+        }
+    }
+
+    companion object {
+        private val TAG = NewsActivity::class.java.simpleName
     }
 }
