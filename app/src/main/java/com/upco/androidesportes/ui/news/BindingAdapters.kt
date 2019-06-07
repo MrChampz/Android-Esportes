@@ -1,11 +1,11 @@
 package com.upco.androidesportes.ui.news
 
-import android.os.Build
+import android.view.View
 import android.widget.ImageView
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.upco.androidesportes.R
 
 /**
@@ -31,8 +31,8 @@ fun ImageView.setImageUrl(url: String?) {
     val progressDrawable = CircularProgressDrawable(context)
     progressDrawable.apply {
         setColorSchemeColors(resources.getColor(R.color.colorPrimary))
-        strokeWidth = 5f
-        centerRadius = 30f
+        strokeWidth = 5f // TODO: Converter de pixels para dpi
+        centerRadius = 30f // TODO: Converter de pixels para dpi
         start()
     }
 
@@ -48,13 +48,12 @@ fun ImageView.setImageUrl(url: String?) {
      * Em caso de erro, errorDrawable é utilizado como drawable na View.
      */
     if (url != null) {
-        Picasso.get()
-                .load(url)
-                .fit()
-                .noFade()
-                .centerCrop()
-                .placeholder(progressDrawable)
-                .error(errorDrawable)
-                .into(this)
+        Glide.with(this)
+             .load(url)
+             .centerCrop()
+             .transition(DrawableTransitionOptions.withCrossFade())
+             .placeholder(progressDrawable)
+             .error(errorDrawable)
+             .into(this)
     }
 }

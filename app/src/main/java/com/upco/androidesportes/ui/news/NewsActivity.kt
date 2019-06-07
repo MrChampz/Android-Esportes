@@ -210,11 +210,14 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
                 /* Passa a lista alterada para o adapter */
                 adapter.submitList(it)
 
+                // TODO: Refatorar! Está voltando ao topo sempre que o feed é carregado com mais
+                //  notícias, ao fazer scroll.
                 /* Faz com que o RecyclerView de notícias role suavemente até a posição inicial */
-                rv_news.smoothScrollToPosition(0)
+                //rv_news.smoothScrollToPosition(0)
 
                 /* Os dados foram recebidos, o feed não está em atualização mais */
-                srl_news.isRefreshing = false
+                if (srl_news.isRefreshing)
+                    srl_news.isRefreshing = false
             }
         })
 
