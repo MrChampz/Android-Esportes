@@ -296,6 +296,10 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
             Log.d(TAG, "Há rede móvel, porém os dados só podem ser baixados por WiFi. " +
                     "Os dados não serão baixados.")
 
+            /* Erro ao atualizar os dados, o feed não está em atualização mais */
+            if (srl_news.isRefreshing)
+                srl_news.isRefreshing = false
+
             /* Notifica o erro ao usuário por meio de um Snackbar */
             Snackbar.make(
                 findViewById(android.R.id.content),
@@ -308,6 +312,10 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         } else {
             /* Loga para fins de debug */
             Log.d(TAG, "Não há qualquer tipo de rede. Os dados não serão baixados.")
+
+            /* Erro ao atualizar os dados, o feed não está em atualização mais */
+            if (srl_news.isRefreshing)
+                srl_news.isRefreshing = false
 
             /* Notifica o erro ao usuário por meio de um Snackbar */
             Snackbar.make(

@@ -110,7 +110,7 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                  * Converte o timestamp do formato vindo da API em um formato usado no Android.
                  */
                 var publication: Long? = null
-                if (item.asJsonObject["age"] != null) {
+                if (item.asJsonObject["publication"] != null) {
                     val timestamp = item.asJsonObject["publication"].asString
                     publication = DateUtils.getUtcFromTimestamp(timestamp)
                 }
