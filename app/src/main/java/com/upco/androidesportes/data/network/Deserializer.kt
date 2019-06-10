@@ -111,7 +111,19 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                  */
                 var publication: Long? = null
                 if (item.asJsonObject["publication"] != null) {
-                    val timestamp = item.asJsonObject["publication"].asString
+                    var timestamp = item.asJsonObject["publication"].asString
+
+                    /*
+                     * Remove os últimos 7 caracteres do timestamp, sendo 6 caracteres
+                     * dos milissegundos e 1 do time zone ('Z'). Por fim, adiciona o
+                     * 'Z' novamente.
+                     * Isso é necessário, pois a API de data/hora do Java (antes da
+                     * versão 8) não é tão precisa, e também não haverá grande impacto
+                     * no resultado final já que se trata de milissegundos.
+                     */
+                    timestamp = timestamp.substring(0, timestamp.length - 7) + 'Z'
+
+                    /* Converte o timestamp em milissegundos, formato salvo no banco de dados */
                     publication = DateUtils.getUtcFromTimestamp(timestamp)
                 }
 

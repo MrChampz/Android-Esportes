@@ -1,9 +1,11 @@
 package com.upco.androidesportes.util
 
 import android.content.Context
+import android.os.Build
 import android.text.format.DateUtils
 import com.upco.androidesportes.R
 import java.text.SimpleDateFormat
+import java.time.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.floor
@@ -13,7 +15,7 @@ import kotlin.math.floor
  */
 object DateUtils {
 
-    /**
+    /*
      * Padrão usado para converter o timestamp vindo da API em um formato de
      * data usado no Android.
      * yyyy -> Ano com quatro caracteres (ex. 2019).
@@ -22,24 +24,43 @@ object DateUtils {
      * HH -> Horas com dois caracteres (ex. 22).
      * mm -> Minutos com dois caracteres (ex. 36).
      * ss -> Segundos com dois caracteres (ex. 44).
-     * SSSSSSSSS -> Milissegundos com nove caracteres (ex. 895509125).
+     * SSS -> Milissegundos com três caracteres (ex. 895).
      * 'Z' -> Indica que o timestamp está normalizado em UTC.
      */
-    private const val TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSSSSSSS'Z'"
+    private const val TIMESTAMP_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+
+    /*
+     * Salva o timezone padrão do sistema antes de alterar para UTC. Isso é necessário,
+     * pois para exibir o timestamp de forma correta posteriormente, o mesmo deve ser
+     * convertido de UTC para o timezone padrão do sistema. Dessa forma o timestamp em
+     * UTC será salvo no banco de dados e apenas em sua exibição será convertido para o
+     * timezone do usuário.
+     */
+    private val defaultTimeZone = TimeZone.getDefault()
 
     /**
-     * Recebe um [timestamp] no formato [yyyy-MM-ddTHH:mm:ss.SSSSSSSSS'Z'], formato
-     * retornado pelo JavaScript, e converte em um timestamp em [Long], que pode ser
-     * utilizado no banco de dados.
+     * Bloco init, o código contido aqui será executado assim que algum método desse object
+     * for chamado. A primeira vez que algum método de algum object é chamado, uma instância
+     * singleton desse object é criada, e o bloco init desse object é executado.
+     */
+    init {
+        /*
+         * Define o timezone padrão do sistema como UTC, pois todas
+         * as operações com datas devem ser feitas nesse timezone.
+         */
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+    }
+
+    /**
+     * Recebe um [timestamp] no formato [yyyy-MM-ddTHH:mm:ss.SSSZ] (UTC), e converte
+     * em um timestamp em milissegundos, que pode ser utilizado no banco de dados.
      *
      * @param timestamp String contendo o timestamp no formato especificado.
-     * @return Retorna a data e hora em UTC, no formato de [Long].
+     * @return Retorna a data e hora UTC, em milissegundos.
      */
     fun getUtcFromTimestamp(timestamp: String): Long {
-        /* Substitui o caractere 'T' do timestamp por ' ', para que seja possível converte-lo */
-        val str = timestamp.replace('T', ' ')
-        val fmt = SimpleDateFormat(TIMESTAMP_PATTERN)
-        return fmt.parse(str).time
+        val fmt = SimpleDateFormat(TIMESTAMP_PATTERN, Locale("pt", "BR"))
+        return fmt.parse(timestamp).time
     }
 
     /**
@@ -61,31 +82,39 @@ object DateUtils {
      * Mais de um dia: "4 dias atrás"
      * Em caso de erro: "Ooops"
      *
-     * @param context               Contexto usado para a localização de recursos (strings).
-     * @param normalizedUtcMidnight O timestamp em UTC (UTC+0).
+     * @param context       Contexto usado para a localização de recursos (strings).
+     * @param normalizedUtc O timestamp em UTC+0.
      * @return Uma representação do timestamp de forma amigável ao usuário, como "1 segundo atrás",
      *         "20 minutos atrás" ou "4 dias atrás".
      */
     @JvmStatic
-    fun getFriendlyTimeString(context: Context, normalizedUtcMidnight: Long): String {
+    fun getFriendlyTimeString(context: Context, normalizedUtc: Long): String {
         /*
-         * NOTA: localDate deve ser o campo publication do [News] e vir direto do banco de dados.
-         *
-         * Como a data foi normalizada ao ser inserida no banco de dados, precisamos pega-la e
-         * transformar em uma data (em UTC) que represente a zona horária local às meia-noite.
+         * Como o timestamp inserido no banco de dados é normalizado (UTC), precisamos
+         * pega-lo e transformar em um timestamp no timezone local do usuário.
          */
-        val localDate = getLocalMidnightFromNormalizedUtcDate(normalizedUtcMidnight)
+        val timestamp = getLocalFromNormalizedUtcDate(normalizedUtc)
 
         /*
-         * Calcula a diferença entre a data atual e a data em que a notícia foi publicada.
-         * Esse calculo é feito em milissegundos, para converter em segundos, divide o resultado
-         * por 1000. Por fim, arredonda o resultado com a função [floor].
+         * O timezone padrão do sistema foi alterado para UTC, fica mais fácil de fazer
+         * operações com data e hora em UTC, pois será sempre a mesma independente de
+         * onde o dispositivo estiver localizado. Sendo assim, a data e hora atual
+         * retornada por Date estará em UTC, por isso utilizamos o método
+         * getLocalFromNormalizedUtcDate para converter de UTC para o timezone local do
+         * usuário, assim as operações abaixo serão feitas corretamente.
          */
-        val seconds = floor(((Date().time - Date(localDate).time)  / 1000).toFloat())
+        val now = getLocalFromNormalizedUtcDate(Date().time)
 
         /*
-         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade de
-         * segundos que há em um ano (31536000).
+         * Calcula a diferença entre a data atual e a data passada como parâmetro.
+         * Esse calculo é feito em milissegundos, para converter em segundos, divide
+         * o resultado por 1000. Por fim, arredonda o resultado com a função [floor].
+         */
+        val seconds = floor(((now - timestamp)  / 1000).toFloat())
+
+        /*
+         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade
+         * de segundos que há em um ano (31536000).
          * Caso o resultado seja igual à 1, passou-se um ano e a string retornada estará no
          * singular. Caso o resultado seja maior que 1, passou-se mais de um ano e a string
          * retornada estará no plural.
@@ -98,8 +127,8 @@ object DateUtils {
         }
 
         /*
-         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade de
-         * segundos que há em um mês (2592000).
+         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade
+         * de segundos que há em um mês (2592000).
          * Caso o resultado seja igual à 1, passou-se um mês e a string retornada estará no
          * singular. Caso o resultado seja maior que 1, passou-se mais de um mês e a string
          * retornada estará no plural.
@@ -112,8 +141,8 @@ object DateUtils {
         }
 
         /*
-         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade de
-         * segundos que há em um dia (86400).
+         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade
+         * de segundos que há em um dia (86400).
          * Caso o resultado seja igual à 1, passou-se um dia e a string retornada estará no
          * singular. Caso o resultado seja maior que 1, passou-se mais de um dia e a string
          * retornada estará no plural.
@@ -126,11 +155,11 @@ object DateUtils {
         }
 
         /*
-         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade de
-         * segundos que há em uma hora (3600).
-         * Caso o resultado seja igual à 1, passou-se uma hora e a string retornada estará no
-         * singular. Caso o resultado seja maior que 1, passou-se mais de uma hora e a string
-         * retornada estará no plural.
+         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade
+         * de segundos que há em uma hora (3600).
+         * Caso o resultado seja igual à 1, passou-se uma hora e a string retornada estará
+         * no singular. Caso o resultado seja maior que 1, passou-se mais de uma hora e a
+         * string retornada estará no plural.
          */
         interval = floor(seconds / 3600).toInt()
         if (interval == 1) {
@@ -140,11 +169,11 @@ object DateUtils {
         }
 
         /*
-         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade de
-         * segundos que há em um minuto (60).
-         * Caso o resultado seja igual à 1, passou-se um minuto e a string retornada estará no
-         * singular. Caso o resultado seja maior que 1, passou-se mais de um minuto e a string
-         * retornada estará no plural.
+         * Calcula o intervalo, dividindo a quantidade de segundos da data pela quantidade
+         * de segundos que há em um minuto (60).
+         * Caso o resultado seja igual à 1, passou-se um minuto e a string retornada estará
+         * no singular. Caso o resultado seja maior que 1, passou-se mais de um minuto e a
+         * string retornada estará no plural.
          */
         interval = floor(seconds / 60).toInt()
         if (interval == 1) {
@@ -155,9 +184,9 @@ object DateUtils {
 
         /*
          * Calcula o intervalo, como o valor já está em segundos, simplesmente arredonda.
-         * Caso o resultado seja igual à 1, passou-se um segundo e a string retornada estará no
-         * singular. Caso o resultado seja maior que 1, passou-se mais de um segundo e a string
-         * retornada estará no plural.
+         * Caso o resultado seja igual à 1, passou-se um segundo e a string retornada estará
+         * no singular. Caso o resultado seja maior que 1, passou-se mais de um segundo e a
+         * string retornada estará no plural.
          */
         interval = floor(seconds).toInt()
         if (interval == 1) {
@@ -173,20 +202,19 @@ object DateUtils {
     /**
      * Esse método retornará o timestamp local para o timestamp UTC+0 (normalizado) fornecido.
      *
-     * @param normalizedUtcDate Timestamp em UTC às meia noite. Esse número é fornecido pelo
-     *                          banco de dados.
+     * @param normalizedUtcDate Timestamp em UTC+0. Esse número é fornecido pelo banco de dados.
      * @return O timestamp local correspondente ao timestamp em UTC+0 fornecido.
      */
-    private fun getLocalMidnightFromNormalizedUtcDate(normalizedUtcDate: Long): Long {
-        /* O TimeZone nos fornecerá o deslocamento da zona de tempo do usuário */
-        val timeZone = TimeZone.getDefault()
-
+    private fun getLocalFromNormalizedUtcDate(normalizedUtcDate: Long): Long {
         /*
-         * Esse deslocamento, em milissegundos, quando adicionado ao timestamp em UTC,
+         * O timezone nos fornecerá o offset que deve ser aplicado ao timestamp em UTC,
+         * para que o mesmo possa ser convertido no timezone do usuário.
+         * Esse offset, em milissegundos, quando adicionado ao timestamp em UTC,
          * resultará no timestamp local.
          */
-        val gmtOffset = timeZone.getOffset(normalizedUtcDate)
+        val gmtOffset = defaultTimeZone.getOffset(normalizedUtcDate)
 
+        /* Retorna o timestamp local (em milissegundos) */
         return normalizedUtcDate + gmtOffset
     }
 }

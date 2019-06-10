@@ -65,6 +65,7 @@ dependencies {
 
     // Testing
     testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
     androidTestImplementation "androidx.test.ext:junit:$testing_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }
