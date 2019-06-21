@@ -1,7 +1,7 @@
 package com.upco.androidesportes.ui.news
 
-import android.view.View
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -30,9 +30,9 @@ fun ImageView.setImageUrl(url: String?) {
      */
     val progressDrawable = CircularProgressDrawable(context)
     progressDrawable.apply {
-        setColorSchemeColors(resources.getColor(R.color.colorPrimary))
-        strokeWidth = 5f // TODO: Converter de pixels para dpi
-        centerRadius = 30f // TODO: Converter de pixels para dpi
+        setColorSchemeColors(ContextCompat.getColor(context, R.color.colorPrimary))
+        strokeWidth = resources.getDimension(R.dimen.news_progress_stroke_width)
+        centerRadius = resources.getDimension(R.dimen.news_progress_center_radius)
         start()
     }
 

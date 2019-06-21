@@ -1,12 +1,8 @@
-package com.upco.androidesportes
+package com.upco.androidesportes.util
 
-import com.upco.androidesportes.util.DateUtils
-import org.hamcrest.CoreMatchers.*
-import org.hamcrest.MatcherAssert.*
+
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyLong
 import java.text.ParseException
 
 /**
@@ -15,7 +11,7 @@ import java.text.ParseException
 class DateUtilsTest {
 
     @Test
-    fun getUtcFromTimestamp_correctTimestamp_isCorrect() {
+    fun getUtcFromTimestamp_CorrectTimestamp_ReturnsUtcLong() {
         var timestamp = "2019-06-08T01:50:26.453Z"
         var millis = 1559958626453L
         var utc = DateUtils.getUtcFromTimestamp(timestamp)
@@ -38,7 +34,7 @@ class DateUtilsTest {
     }
 
     @Test(expected = ParseException::class)
-    fun getUtcFromTimestamp_invalidTimestamp_shouldThrowException() {
+    fun getUtcFromTimestamp_InvalidTimestamp_ShouldThrowException() {
         /* Timestamp sem o caractere 'T' */
         var timestamp = "2019-06-08 04:32:14.151Z"
         DateUtils.getUtcFromTimestamp(timestamp)
