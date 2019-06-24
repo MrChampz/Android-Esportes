@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.upco.androidesportes.data.NewsRepository
 
 /**
- * Classe Factory que nos permite criar um NewsViewModel.
+ * Classe Factory que nos permite criar um [NewsViewModel].
+ *
+ * @param repository Repositório que será utilizado na obtenção das notícias.
  */
 class NewsViewModelFactory(private val repository: NewsRepository): ViewModelProvider.Factory {
 

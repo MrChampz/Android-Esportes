@@ -1,30 +1,24 @@
 package com.upco.androidesportes.ui.news
 
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.ConnectivityManager.TYPE_WIFI
-import android.net.NetworkCapabilities
-import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
-import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.upco.androidesportes.R
+import com.upco.androidesportes.model.NetworkState
 import com.upco.androidesportes.databinding.ActivityNewsBinding
 import com.upco.androidesportes.model.News
+import com.upco.androidesportes.model.Status
 import com.upco.androidesportes.ui.common.BaseActivity
 import com.upco.androidesportes.ui.common.showWithAnimation
 import com.upco.androidesportes.ui.settings.SettingsActivity
@@ -32,15 +26,19 @@ import com.upco.androidesportes.util.Injector
 import com.upco.androidesportes.util.NetworkUtils
 import com.upco.androidesportes.util.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_news.*
-import kotlinx.android.synthetic.main.app_bar_news.*
+import java.util.*
+import kotlin.concurrent.schedule
 
 /**
  * Exibe um feed de notícias. Ao clicar em alguma, instancia uma [WebViewActivity] para exibi-la.
  */
-class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
+class NewsActivity: BaseActivity() {
 
+    /* ViewModel que faz a interface com o repositório */
     private lateinit var viewModel: NewsViewModel
-    private val adapter = NewsAdapter(this)
+
+    /* Faz o gerenciamento da exibição das notícias no RecyclerView. */
+    private lateinit var adapter: NewsAdapter
 
     /**
      * Método chamado quando a activity está iniciando,
@@ -55,6 +53,12 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
             R.layout.activity_news
         )
 
+        /* Configura o ViewModel */
+        setupViewModel()
+
+        /* Faz binding do ViewModel com o código estático */
+        binding.viewModel = viewModel
+
         /* Configura a Toolbar */
         setupToolbar(getString(R.string.news_activity_title), false)
 
@@ -64,11 +68,20 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         /* Configura o FloatingActionButton */
         setupFloatingActionButton()
 
-        /* Configura o ViewModel */
-        setupViewModel()
-
-        /* Faz binding do ViewModel com o código estático */
-        binding.viewModel = viewModel
+        /*
+         * Cria uma instância do NewsAdapter.
+         * O segundo parâmetro é um callback que será invocado ao clicar
+         * na view, quando houver algum erro.
+         */
+        adapter = NewsAdapter(this) {
+            /*
+             * Verifica o estado da rede, e se houver internet, tenta
+             * fazer a requisição novamente
+             */
+            if (verifyAndNotifyNetworkState()) {
+                viewModel.retry()
+            }
+        }
 
         /* Define o adapter do RecyclerView */
         rv_news.adapter = adapter
@@ -101,20 +114,71 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /**
-     * Método chamado quando o usuário desliza o [SwipeRefreshLayout],
-     * para que o conteúdo do feed seja atualizado.
+     * Configura o ViewModel.
      */
-    override fun onRefresh() {
-        /* Indica ao ViewModel que queremos atualizar o feed de notícias */
-        refreshNews()
+    private fun setupViewModel() {
+        /* Obtém o ViewModel */
+        viewModel = ViewModelProviders
+                .of(this, Injector.provideNewsViewModelFactory(this))
+                .get(NewsViewModel::class.java)
+
+        /* Define um Observer para observar às alterações em news */
+        viewModel.news.observe(this, Observer<PagedList<News>> {
+            /* Verifica se os dados foram recebidos */
+            if (it.isNotEmpty()) {
+                /* Passa a lista alterada para o adapter */
+                adapter.submitList(it)
+
+                // TODO: Refatorar! Está voltando ao topo sempre que o feed é carregado com mais
+                //  notícias, ao fazer scroll.
+                /* Faz com que o RecyclerView de notícias role suavemente até a posição inicial */
+                //rv_news.smoothScrollToPosition(0)
+            }
+        })
+
+        /* Define um Observer para observar às alterações em networkState */
+        viewModel.networkState.observe(this, Observer {
+            /* Se houver algum erro, exibe para o usuário */
+            if (it.status == Status.FAILED && it.msg != null) {
+                Toast.makeText(this, "\uD8D3\uDE28 Ooops ${it.msg}", Toast.LENGTH_LONG)
+                     .show()
+
+                // Ao ocorrer um erro, o layout de erro vai ser inflado e os limites da view
+                // vão mudar, assim é necessário fazer scroll até o final do RecyclerView,
+                // para que a view seja exibida por completo na tela. Mas o scroll só é feito
+                // caso o usuário já esteja no final do RecyclerView.
+                val layoutManager = rv_news.layoutManager as LinearLayoutManager
+                if (layoutManager.findLastVisibleItemPosition() == adapter.itemCount - 1) {
+                    rv_news.smoothScrollToPosition(adapter.itemCount - 1)
+                }
+            }
+
+            /* Atualiza o estado no adapter */
+            adapter.setNetworkState(it)
+        })
     }
 
     /**
      * Configura o SwipeRefreshLayout.
      */
     private fun setupSwipeRefreshLayout() {
+        /* Define um Observer para observar às alterações em refreshState */
+        viewModel.refreshState.observe(this, Observer {
+            /* Exibe ou não o ProgressBar do SwipeRefreshLayout de acordo com o estado */
+            srl_news.isRefreshing = it == NetworkState.LOADING
+
+            /* Se houver algum erro, exibe para o usuário */
+            if (it.msg != null) {
+                Toast.makeText(this, "\uD8D3\uDE28 Ooops ${it.msg}", Toast.LENGTH_LONG)
+                     .show()
+            }
+        })
+
         /* Define o listener que será chamado quando atualizando */
-        srl_news.setOnRefreshListener(this)
+        srl_news.setOnRefreshListener {
+            /* Atualiza as notícias em cache, se houver internet */
+            refreshNews()
+        }
 
         /* Define o esquema de cores que serão usadas, nesse caso apenas a cor primária do app */
         srl_news.setColorSchemeResources(R.color.colorPrimary)
@@ -195,40 +259,6 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /**
-     * Configura o ViewModel.
-     */
-    private fun setupViewModel() {
-        /* Obtém o ViewModel */
-        viewModel = ViewModelProviders
-                .of(this, Injector.provideNewsViewModelFactory(this))
-                .get(NewsViewModel::class.java)
-
-        /* Define um Observer para observar às alterações em news */
-        viewModel.news.observe(this, Observer<PagedList<News>> {
-            /* Verifica se os dados foram recebidos */
-            if (!it.isEmpty()) {
-                /* Passa a lista alterada para o adapter */
-                adapter.submitList(it)
-
-                // TODO: Refatorar! Está voltando ao topo sempre que o feed é carregado com mais
-                //  notícias, ao fazer scroll.
-                /* Faz com que o RecyclerView de notícias role suavemente até a posição inicial */
-                //rv_news.smoothScrollToPosition(0)
-
-                /* Os dados foram recebidos, o feed não está em atualização mais */
-                if (srl_news.isRefreshing)
-                    srl_news.isRefreshing = false
-            }
-        })
-
-        /* Define um Observer para observar às alterações em networkErrors */
-        viewModel.networkErrors.observe(this, Observer<String> {
-            Toast.makeText(this, "\uD8D3\uDE28 Ooops $it", Toast.LENGTH_LONG)
-                 .show()
-        })
-    }
-
-    /**
      * Esse método é chamado caso o item de "Configurações", no menu, seja selecionado.
      * Ele é responsável por iniciar a activity de configurações.
      *
@@ -250,11 +280,8 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
      * Esse método deve ser chamado sempre que o app for aberto.
      */
     private fun requestInitialNews() {
-        /* Indica ao SwipeRefreshLayout que estamos atualizando o feed */
-        srl_news.isRefreshing = true
-
         /* Faz a requisição inicial pelas notícias. */
-        viewModel.fetchNews()
+        viewModel.fetch()
 
         /* Faz com que os dados em cache sejam atualizados para os mais recentes na API. */
         refreshNews()
@@ -265,6 +292,23 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
      * Esse método é chamado na atualização do feed.
      */
     private fun refreshNews() {
+        /* Atualiza as notícias de acordo com a API */
+        if (verifyAndNotifyNetworkState()) {
+            viewModel.refresh()
+        }
+    }
+
+    /**
+     * Verifica e notifica, para o usuário, o estado da rede.
+     * Se houver rede WiFi, retorna true.
+     * Se houver rede móvel e a configuração permitir download por rede
+     * móvel, retorna true.
+     * Caso contrário, retorna false.
+     *
+     * @return true, indicando que há rede e podem ser feitas requisições..
+     * false, caso contrário.
+     */
+    private fun verifyAndNotifyNetworkState(): Boolean {
         /*
          * Obtém o valor da configuração que indica se os dados devem ser
          * baixados apenas por WiFi ou por redes móveis também.
@@ -279,18 +323,18 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
         val isMobileConnected = NetworkUtils.isMobileConnected(this)
 
         /* Indica se os dados locais devem ser atualizados de acordo com a API */
-        val fetchNewData = if (isWifiConnected) {
+        if (isWifiConnected) {
             /* Loga para fins de debug */
             Log.d(TAG, "O dados serão baixados por WiFi.")
 
             /* Retorna true, indicando que as notícias devem ser atualizadas */
-            true
+            return true
         } else if (useBothNetworks && isMobileConnected) {
             /* Loga para fins de debug */
             Log.d(TAG, "O dados serão baixados por rede móvel.")
 
             /* Retorna true, indicando que as notícias devem ser atualizadas */
-            true
+            return true
         } else if (!useBothNetworks && isMobileConnected) {
             /* Loga para fins de debug */
             Log.d(TAG, "Há rede móvel, porém os dados só podem ser baixados por WiFi. " +
@@ -302,13 +346,13 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
             /* Notifica o erro ao usuário por meio de um Snackbar */
             Snackbar.make(
-                findViewById(android.R.id.content),
-                "Erro ao atualizar o feed. Os dados devem ser baixados por WiFi.",
-                Snackbar.LENGTH_LONG
+                    findViewById(android.R.id.content),
+                    "Os dados devem ser baixados por WiFi. Tente novamente.",
+                    Snackbar.LENGTH_LONG
             ).show()
 
             /* Retorna false, indicando que as notícias não devem ser atualizadas */
-            false
+            return false
         } else {
             /* Loga para fins de debug */
             Log.d(TAG, "Não há qualquer tipo de rede. Os dados não serão baixados.")
@@ -319,18 +363,13 @@ class NewsActivity: BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
             /* Notifica o erro ao usuário por meio de um Snackbar */
             Snackbar.make(
-                findViewById(android.R.id.content),
-                "Erro ao atualizar o feed. Não há nenhuma rede conectada.",
-                Snackbar.LENGTH_LONG
+                    findViewById(android.R.id.content),
+                    "Não há nenhuma rede conectada. Tente novamente.",
+                    Snackbar.LENGTH_LONG
             ).show()
 
             /* Retorna false, indicando que as notícias não devem ser atualizadas */
-            false
-        }
-
-        /* Atualiza as notícias de acordo com a API */
-        if (fetchNewData) {
-            viewModel.refreshNews()
+            return false
         }
     }
 
