@@ -3,7 +3,6 @@
     <!-- Cores gerais -->
     <color name="colorPrimary">#3B9C00</color>
     <color name="colorPrimaryDark">#328500</color>
-    <!--<color name="colorAccent">#263238</color>-->
     <color name="colorAccent">#328500</color>
     <color name="colorBackground">#F9F9F9</color>
 
@@ -12,6 +11,9 @@
     <color name="colorTextTitle">#328400</color>
     <color name="colorTextSummary">#848484</color>
     <color name="colorTextTimestamp">#A0A0A0</color>
+    <color name="colorTextError">#464646</color>
+    <color name="colorTextRetry">#A0A0A0</color>
+    <color name="colorTextAbout">#CACACA</color>
 
     <!-- Cores referentes ao list item News -->
     <color name="colorNewsBackground">#F9F9F9</color>

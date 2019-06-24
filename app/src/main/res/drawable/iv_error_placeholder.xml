@@ -10,7 +10,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_error_24dp"
+        android:drawable="@drawable/ic_image_error_24dp"
         android:gravity="center" />
 
 </layer-list>

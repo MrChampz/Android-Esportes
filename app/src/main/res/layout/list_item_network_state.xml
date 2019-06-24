@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Exibe um ProgressBar no final do feed enquanto o app tenta baixar mais notícias.
+    Em caso de erro, é exibida uma view, indicando o erro, que ao receber toque tenta
+    fazer o download novamente.
+ -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/list_item_network_state_min_height">
+
+    <!--
+        Exibe o layout de erro, se houver algum, e ao receber toque tenta
+        baixar as notícias novamente.
+     -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_network_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <!-- Ícone de erro -->
+        <ImageView
+            android:id="@+id/iv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_item_news_padding"
+            android:layout_marginRight="@dimen/list_item_news_padding"
+            android:contentDescription="@string/cd_network_state_error_icon"
+            android:src="@drawable/ic_network_error_72dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_error"
+            app:layout_constraintLeft_toLeftOf="@id/cl_network_state"
+            app:layout_constraintRight_toRightOf="@id/cl_network_state"
+            app:layout_constraintTop_toTopOf="@id/cl_network_state"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <!-- Mensagem de erro -->
+        <TextView
+            android:id="@+id/tv_error"
+            style="@style/TextAppearance.Error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_item_news_padding"
+            android:layout_marginStart="@dimen/list_item_news_padding"
+            android:layout_marginRight="@dimen/list_item_news_padding"
+            android:layout_marginEnd="@dimen/list_item_news_padding"
+            android:textAlignment="center"
+            android:text="@string/tx_network_state_error"
+            app:layout_constraintTop_toBottomOf="@id/iv_error"
+            app:layout_constraintBottom_toTopOf="@id/tv_retry"
+            app:layout_constraintLeft_toLeftOf="@id/cl_network_state"
+            app:layout_constraintRight_toRightOf="@id/cl_network_state" />
+
+        <!-- Ícone que acompanha a indicação abaixo -->
+        <ImageView
+            android:id="@+id/iv_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_item_news_padding"
+            android:layout_marginStart="@dimen/list_item_news_padding"
+            android:layout_marginTop="@dimen/list_item_network_state_intern_margin"
+            android:layout_marginRight="@dimen/list_item_network_state_intern_margin"
+            android:layout_marginEnd="@dimen/list_item_network_state_intern_margin"
+            android:layout_marginBottom="@dimen/list_item_news_padding"
+            android:contentDescription="@string/cd_network_state_retry_icon"
+            android:src="@drawable/ic_retry_18dp"
+            app:layout_constraintBottom_toBottomOf="@id/cl_network_state"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="@id/cl_network_state"
+            app:layout_constraintRight_toLeftOf="@id/tv_retry"
+            app:layout_constraintTop_toBottomOf="@id/tv_error" />
+
+        <!-- Texto indicando que deve-se tocar na view para tentar novamente -->
+        <TextView
+            android:id="@+id/tv_retry"
+            style="@style/TextAppearance.Retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/list_item_network_state_intern_margin"
+            android:layout_marginRight="@dimen/list_item_news_padding"
+            android:layout_marginEnd="@dimen/list_item_news_padding"
+            android:layout_marginBottom="@dimen/list_item_news_padding"
+            android:text="@string/tx_network_state_retry"
+            app:layout_constraintBottom_toBottomOf="@id/cl_network_state"
+            app:layout_constraintLeft_toRightOf="@id/iv_retry"
+            app:layout_constraintRight_toRightOf="@id/cl_network_state"
+            app:layout_constraintTop_toBottomOf="@id/tv_error" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ProgressBar exibido enquanto o app tentar fazer o download de mais notícias -->
+    <ProgressBar
+        android:id="@+id/pb_progress"
+        android:layout_width="@dimen/list_item_network_state_progress_size"
+        android:layout_height="@dimen/list_item_network_state_progress_size"
+        android:layout_margin="@dimen/list_item_news_padding"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

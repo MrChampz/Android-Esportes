@@ -2,7 +2,7 @@
 
     <!-- Tema utilizado apenas na tela de splash -->
     <style name="Theme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@color/colorBackground</item>
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
@@ -60,6 +60,27 @@
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- Estilo utilizado para exibir o erro (caso haja) no final do feed -->
+    <style name="TextAppearance.Error" parent="android:TextAppearance">
+        <item name="android:textColor">@color/colorTextError</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Estilo utilizado no texto, no final do feed, caso haja algum erro -->
+    <style name="TextAppearance.Retry" parent="android:TextAppearance">
+        <item name="android:textColor">@color/colorTextRetry</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Estilo utilizado nas informações do app, na SettingsActivity -->
+    <style name="TextAppearance.About" parent="android:TextAppearance">
+        <item name="android:textColor">@color/colorTextAbout</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
 </resources>

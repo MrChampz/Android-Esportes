@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema utilizado apenas na tela de splash -->
+    <style name="Theme.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorBackground</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowSplashscreenContent">@drawable/splash</item>
+
+        <!-- Exibe a barra de navegação com a cor de fundo da SplashActivity -->
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:navigationBarColor">@color/colorBackground</item>
+    </style>
+</resources>

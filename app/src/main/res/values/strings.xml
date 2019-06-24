@@ -1,11 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Permite concatenar as strings contidas aqui (entidades) com as strings definidas
+    nesse xml, sem que seja necessário fazer isso por meio de código dinâmico.
+ -->
+<!DOCTYPE resources [
+    <!ENTITY app_name "Android Esportes">
+    <!ENTITY app_version "1.0.0">
+]>
+
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Android Esportes</string>
+    <string name="app_name">&app_name;</string>
+    <string name="app_version">&app_version;</string>
 
     <!-- NewsActivity -->
     <string name="news_activity_title">Notícias</string>
+    <string name="tx_network_state_error">Erro ao obter notícias</string>
+    <string name="tx_network_state_retry">Toque para tentar novamente</string>
+    <string name="cd_network_state_error_icon">Ícone de erro</string>
+    <string name="cd_network_state_retry_icon">Ícone do botão: "tente novamente"</string>
 
     <!-- SettingsActivity -->
     <string name="settings_activity_title">Configurações</string>
+    <string name="tx_about_version">Versão &app_version;</string>
+    <string name="tx_about_copyright">\u00A9 2019 UpCO Ltd.</string>
+    <string name="cd_about_logo">Logo do app</string>
 
     <!-- Strings usadas como actions (menu) -->
     <string name="action_settings">Configurações</string>

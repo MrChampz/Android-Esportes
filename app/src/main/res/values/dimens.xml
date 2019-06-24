@@ -3,6 +3,12 @@
     <!-- Dimensões relativas à activity de notícias -->
     <dimen name="news_fab_size">35dp</dimen>
     <dimen name="news_fab_margin">16dp</dimen>
+    <dimen name="news_progress_stroke_width">1dp</dimen>
+    <dimen name="news_progress_center_radius">10dp</dimen>
+
+    <!-- Dimensões relativas à activity de configurações -->
+    <dimen name="settings_about_padding">20dp</dimen>
+    <dimen name="settings_about_intern_margin">5dp</dimen>
 
     <!-- Dimensões relativas ao layout de uma notícia -->
     <dimen name="list_item_news_margin">8dp</dimen>
@@ -12,4 +18,7 @@
     <dimen name="list_item_news_title_margin_top">10dp</dimen>
     <dimen name="list_item_news_summary_margin_top">5dp</dimen>
     <dimen name="list_item_news_timestamp_margin_top">2dp</dimen>
+    <dimen name="list_item_network_state_min_height">60dp</dimen>
+    <dimen name="list_item_network_state_intern_margin">5dp</dimen>
+    <dimen name="list_item_network_state_progress_size">24dp</dimen>
 </resources>

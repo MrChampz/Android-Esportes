@@ -21,18 +21,6 @@
         <include layout="@layout/app_bar_news" />
 
         <!--
-            TODO: Implementar!
-            Esse TextView é exibido caso haja algum erro enquanto carregando as notícias
-        -->
-        <TextView
-            android:id="@+id/tv_error"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            tools:text="Erro ao carregar as notícias. Tente novamente."
-            android:visibility="gone" />
-
-        <!--
             SwipeRefreshLayout que possibilitará que a lista de notícias seja atualizada
             com novas notícias vindas da API
         -->
