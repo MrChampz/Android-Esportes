@@ -17,6 +17,7 @@
     <string name="news_activity_title">Notícias</string>
     <string name="tx_network_state_error">Erro ao obter notícias</string>
     <string name="tx_network_state_retry">Toque para tentar novamente</string>
+    <string name="cd_news_image">Imagem da notícia</string>
     <string name="cd_network_state_error_icon">Ícone de erro</string>
     <string name="cd_network_state_retry_icon">Ícone do botão: "tente novamente"</string>
 
@@ -25,6 +26,17 @@
     <string name="tx_about_version">Versão &app_version;</string>
     <string name="tx_about_copyright">\u00A9 2019 UpCO Ltd.</string>
     <string name="cd_about_logo">Logo do app</string>
+
+    <!-- Strings usadas para notificar ao usuário o estado da rede -->
+    <string name="tx_network_available">Rede disponível</string>
+    <string name="tx_network_unavailable">Rede indisponível</string>
+    <string name="tx_network_wifi_needed">
+        Os dados devem ser baixados por WiFi. Tente novamente.
+    </string>
+    <string name="tx_network_no_connection">
+        Não há nenhuma rede conectada. Tente novamente.
+    </string>
+    <string name="tx_network_request_error">Erro ao obter notícias</string>
 
     <!-- Strings usadas como actions (menu) -->
     <string name="action_settings">Configurações</string>

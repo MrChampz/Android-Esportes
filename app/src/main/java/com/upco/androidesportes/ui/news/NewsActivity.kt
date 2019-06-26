@@ -26,11 +26,11 @@ import com.upco.androidesportes.util.Injector
 import com.upco.androidesportes.util.NetworkUtils
 import com.upco.androidesportes.util.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_news.*
-import java.util.*
-import kotlin.concurrent.schedule
 
 /**
- * Exibe um feed de notícias. Ao clicar em alguma, instancia uma [WebViewActivity] para exibi-la.
+ * Exibe um feed de notícias. Ao clicar em alguma, instancia uma
+ * [WebViewActivity][com.upco.androidesportes.ui.webview.WebViewActivity]
+ * para exibi-la.
  */
 class NewsActivity: BaseActivity() {
 
@@ -128,11 +128,6 @@ class NewsActivity: BaseActivity() {
             if (it.isNotEmpty()) {
                 /* Passa a lista alterada para o adapter */
                 adapter.submitList(it)
-
-                // TODO: Refatorar! Está voltando ao topo sempre que o feed é carregado com mais
-                //  notícias, ao fazer scroll.
-                /* Faz com que o RecyclerView de notícias role suavemente até a posição inicial */
-                //rv_news.smoothScrollToPosition(0)
             }
         })
 
@@ -140,13 +135,19 @@ class NewsActivity: BaseActivity() {
         viewModel.networkState.observe(this, Observer {
             /* Se houver algum erro, exibe para o usuário */
             if (it.status == Status.FAILED && it.msg != null) {
-                Toast.makeText(this, "\uD8D3\uDE28 Ooops ${it.msg}", Toast.LENGTH_LONG)
+                /* Loga o erro para fins de debug */
+                Log.e(TAG, "Erro: ${it.msg}")
+
+                /* Notifica o usuário sobre o erro por meio de um Toast */
+                Toast.makeText(this, R.string.tx_network_request_error, Toast.LENGTH_LONG)
                      .show()
 
-                // Ao ocorrer um erro, o layout de erro vai ser inflado e os limites da view
-                // vão mudar, assim é necessário fazer scroll até o final do RecyclerView,
-                // para que a view seja exibida por completo na tela. Mas o scroll só é feito
-                // caso o usuário já esteja no final do RecyclerView.
+                /*
+                 * Ao ocorrer um erro, o layout de erro vai ser inflado e os limites da view
+                 * vão mudar, assim é necessário fazer scroll até o final do RecyclerView,
+                 * para que a view seja exibida por completo na tela. Mas o scroll só é feito
+                 * caso o usuário já esteja no final do RecyclerView.
+                 */
                 val layoutManager = rv_news.layoutManager as LinearLayoutManager
                 if (layoutManager.findLastVisibleItemPosition() == adapter.itemCount - 1) {
                     rv_news.smoothScrollToPosition(adapter.itemCount - 1)
@@ -167,9 +168,19 @@ class NewsActivity: BaseActivity() {
             /* Exibe ou não o ProgressBar do SwipeRefreshLayout de acordo com o estado */
             srl_news.isRefreshing = it == NetworkState.LOADING
 
+            /* Se houve sucesso na atualização */
+            if (it == NetworkState.LOADED) {
+                /* Faz com que o RecyclerView de notícias role suavemente até a posição inicial */
+                rv_news.smoothScrollToPosition(0)
+            }
+
             /* Se houver algum erro, exibe para o usuário */
             if (it.msg != null) {
-                Toast.makeText(this, "\uD8D3\uDE28 Ooops ${it.msg}", Toast.LENGTH_LONG)
+                /* Loga o erro para fins de debug */
+                Log.e(TAG, "Erro: ${it.msg}")
+
+                /* Notifica o usuário sobre o erro por meio de um Toast */
+                Toast.makeText(this, R.string.tx_network_request_error, Toast.LENGTH_LONG)
                      .show()
             }
         })
@@ -347,7 +358,7 @@ class NewsActivity: BaseActivity() {
             /* Notifica o erro ao usuário por meio de um Snackbar */
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Os dados devem ser baixados por WiFi. Tente novamente.",
+                    R.string.tx_network_wifi_needed,
                     Snackbar.LENGTH_LONG
             ).show()
 
@@ -364,7 +375,7 @@ class NewsActivity: BaseActivity() {
             /* Notifica o erro ao usuário por meio de um Snackbar */
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Não há nenhuma rede conectada. Tente novamente.",
+                    R.string.tx_network_no_connection,
                     Snackbar.LENGTH_LONG
             ).show()
 

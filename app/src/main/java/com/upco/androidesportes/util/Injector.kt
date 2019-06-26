@@ -32,7 +32,7 @@ object Injector {
 
     /**
      * Fornece o [NewsViewModelFactory] que é usado para obter
-     * referencias para objetos [NewsViewModel].
+     * referencias para objetos [NewsViewModel][com.upco.androidesportes.ui.news.NewsViewModel].
      */
     fun provideNewsViewModelFactory(context: Context): NewsViewModelFactory {
         return NewsViewModelFactory(provideNewsRepository(context))

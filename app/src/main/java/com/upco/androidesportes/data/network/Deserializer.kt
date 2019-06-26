@@ -1,6 +1,5 @@
 package com.upco.androidesportes.data.network
 
-import android.util.Log
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -9,10 +8,6 @@ import com.upco.androidesportes.model.News
 import com.upco.androidesportes.model.NewsFetchResponse
 import com.upco.androidesportes.util.DateUtils
 import java.lang.reflect.Type
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.ZonedDateTime
-import java.util.*
 
 class Deserializer: JsonDeserializer<NewsFetchResponse> {
 
@@ -114,14 +109,24 @@ class Deserializer: JsonDeserializer<NewsFetchResponse> {
                     var timestamp = item.asJsonObject["publication"].asString
 
                     /*
-                     * Remove os últimos 7 caracteres do timestamp, sendo 6 caracteres
-                     * dos milissegundos e 1 do time zone ('Z'). Por fim, adiciona o
-                     * 'Z' novamente.
+                     * Remove os últimos caracteres do timestamp + 1 do time zone ('Z').
+                     * Por fim, adiciona o 'Z' novamente.
                      * Isso é necessário, pois a API de data/hora do Java (antes da
                      * versão 8) não é tão precisa, e também não haverá grande impacto
                      * no resultado final já que se trata de milissegundos.
                      */
-                    timestamp = timestamp.substring(0, timestamp.length - 7) + 'Z'
+
+                    /* Calcula a quantidade de caracteres de milissegundos do timestamp */
+                    val length = timestamp.substring(
+                            timestamp.lastIndexOf('.') + 1,
+                            timestamp.length - 1
+                    ).length
+
+                    /*
+                     * Retira a quantidade length de caracteres + 1 do caractere 'Z',
+                     * deixando apenas os 3 necessários. Por fim, adiciona o 'Z' novamente.
+                     */
+                    timestamp = timestamp.dropLast(length - 3 + 1) + 'Z'
 
                     /* Converte o timestamp em milissegundos, formato salvo no banco de dados */
                     publication = DateUtils.getUtcFromTimestamp(timestamp)

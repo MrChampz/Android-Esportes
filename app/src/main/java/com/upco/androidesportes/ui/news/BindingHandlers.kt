@@ -1,8 +1,6 @@
 package com.upco.androidesportes.ui.news
 
 import android.content.Intent
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.upco.androidesportes.model.News
 import com.upco.androidesportes.ui.webview.WebViewActivity

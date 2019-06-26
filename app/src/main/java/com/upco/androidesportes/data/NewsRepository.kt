@@ -7,7 +7,7 @@ import com.upco.androidesportes.data.network.Service
 import com.upco.androidesportes.model.NewsFetchResult
 
 /**
- * Repositório para notícias [News].
+ * Repositório para notícias [News][com.upco.androidesportes.model.News].
  * Funciona com fonte de dados local (Room) e externa (API).
  *
  * @param service Interface com a API, será utilizada para as requisições.

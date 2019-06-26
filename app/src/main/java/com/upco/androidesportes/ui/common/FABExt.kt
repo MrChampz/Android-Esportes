@@ -1,5 +1,6 @@
 package com.upco.androidesportes.ui.common
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewTreeObserver
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  *
  * @param delay Tempo a ser esperado antes de exibir o FAB. O padrão é 200ms.
  */
+@SuppressLint("RestrictedApi")
 fun FloatingActionButton.showWithAnimation(delay: Long = 200) {
     /* Define o estado inicial para a animação */
     visibility = View.INVISIBLE

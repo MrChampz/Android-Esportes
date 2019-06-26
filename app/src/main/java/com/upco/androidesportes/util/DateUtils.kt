@@ -1,13 +1,9 @@
 package com.upco.androidesportes.util
 
 import android.content.Context
-import android.os.Build
-import android.text.format.DateUtils
 import com.upco.androidesportes.R
 import java.text.SimpleDateFormat
-import java.time.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.math.floor
 
 /**

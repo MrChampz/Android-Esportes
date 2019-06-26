@@ -18,6 +18,10 @@ abstract class NewsDatabase: RoomDatabase() {
     abstract fun newsDao(): NewsDao
 
     companion object {
+        /* Nome do arquivo do banco de dados */
+        private const val DATABASE_NAME = "AndroidEsportes_News.db"
+
+        /* Instância singleton do banco de dados */
         @Volatile private var instance: NewsDatabase? = null
 
         /**
@@ -43,7 +47,7 @@ abstract class NewsDatabase: RoomDatabase() {
                 Room.databaseBuilder(
                     context.applicationContext,
                     NewsDatabase::class.java,
-                    "News.db"
+                    DATABASE_NAME
                 ).build()
     }
 }

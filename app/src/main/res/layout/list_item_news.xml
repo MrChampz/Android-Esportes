@@ -36,6 +36,7 @@
                 android:layout_height="200dp"
                 android:background="@color/colorNewsImageBackground"
                 android:visibility="@{TextUtils.isEmpty(news.image) ? View.GONE : View.VISIBLE}"
+                android:contentDescription="@string/cd_news_image"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintVertical_bias="0.0"
                 app:layout_constraintTop_toTopOf="parent"

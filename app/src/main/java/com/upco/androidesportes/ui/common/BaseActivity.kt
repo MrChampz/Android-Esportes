@@ -69,7 +69,7 @@ open class BaseActivity:
         if (!createdNow) {
             Snackbar.make(
                 findViewById(android.R.id.content),
-                "Rede disponível",
+                R.string.tx_network_available,
                 Snackbar.LENGTH_LONG
             ).show()
         }
@@ -98,7 +98,7 @@ open class BaseActivity:
         if (!createdNow) {
             Snackbar.make(
                 findViewById(android.R.id.content),
-                "Rede indisponível",
+                R.string.tx_network_unavailable,
                 Snackbar.LENGTH_LONG
             ).show()
         }

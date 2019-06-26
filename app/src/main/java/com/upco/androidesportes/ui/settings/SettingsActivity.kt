@@ -1,12 +1,9 @@
 package com.upco.androidesportes.ui.settings
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.upco.androidesportes.R
 import com.upco.androidesportes.ui.common.BaseActivity
-import kotlinx.android.synthetic.main.app_bar_news.*
 
 /**
  * Possibilita modificar as configurações da aplicação.
